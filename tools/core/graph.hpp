@@ -2,6 +2,7 @@
 #define GRAPH_HPP
 
 #include "types.hpp"
+#include <unordered_set>
 #include <vector>
 
 struct Graph {
@@ -24,11 +25,11 @@ struct Graph {
 
 Graph create_clique(i32 n);
 
-double subset_modularity(const Graph &graph, const std::vector<i32> &a);
-double partition_modularity(const Graph &graph,
-                            const std::vector<std::vector<i32>> &partition);
+double subset_modularity(const Graph &graph, const std::unordered_set<i32> &a);
 double
-partition_modularity_star(const Graph &graph,
-                          const std::vector<std::vector<i32>> &partition);
+partition_modularity(const Graph &graph,
+                     const std::vector<std::unordered_set<i32>> &partition);
+double partition_modularity_star(
+    const Graph &graph, const std::vector<std::unordered_set<i32>> &partition);
 
 #endif

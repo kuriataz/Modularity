@@ -3,6 +3,7 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <stdexcept>
 #include <string.h>
@@ -53,10 +54,12 @@ Graph parse_graph(const std::string &filename) {
   std::istringstream iss(line);
   iss >> n;
   Graph graph(n);
+  std::map<i32, std::vector<i32>> edges_to_remove;
 
   while (std::getline(infile, line)) {
-    if (line.empty())
+    if (line.empty()) {
       continue;
+    }
 
     std::istringstream linestream(line);
     std::string prefix;
@@ -106,6 +109,18 @@ Graph parse_graph(const std::string &filename) {
       continue;
     }
 
+    if (prefix == "x") {
+      i32 from, to;
+      linestream >> from >> to;
+      // std::cout << "Removing edge from " << from << " to " << to <<
+      // std::endl;
+      if (from < 0 || from >= n || to < 0 || to >= n) {
+        throw std::runtime_error("Invalid edge to remove: " + line);
+      }
+      edges_to_remove[from].push_back(to);
+      continue;
+    }
+
     i32 from, to;
     linestream >> from >> to;
     graph.adjacency_list[from].push_back(to);
@@ -121,17 +136,44 @@ Graph parse_graph(const std::string &filename) {
                                   graph.adjacency_list[i].end());
   }
 
+  // remove edges that were marked for removal
+  for (const auto &pair : edges_to_remove) {
+    i32 from = pair.first;
+    for (const auto &to : pair.second) {
+      auto &neighbors = graph.adjacency_list[from];
+      auto it = std::remove(neighbors.begin(), neighbors.end(), to);
+      if (it != neighbors.end()) {
+        neighbors.erase(it, neighbors.end());
+        graph.m--;
+      } else {
+        std::cerr << "Warning: edge from " << from << " to " << to
+                  << " not found in the graph.\n";
+      }
+      // Also remove the reverse edge
+      auto &to_neighbors = graph.adjacency_list[to];
+      it = std::remove(to_neighbors.begin(), to_neighbors.end(), from);
+      if (it != to_neighbors.end()) {
+        to_neighbors.erase(it, to_neighbors.end());
+        graph.m--;
+      } else {
+        std::cerr << "Warning: edge from " << to << " to " << from
+                  << " not found in the graph.\n";
+      }
+    }
+  }
+
   return graph;
 }
 
-std::vector<std::vector<i32>> parse_partition(const std::string &filename) {
+std::vector<std::unordered_set<i32>>
+parse_partition(const std::string &filename) {
   std::ifstream infile(filename);
   if (!infile.is_open()) {
     throw std::runtime_error("Cannot open file: " + filename);
   }
 
   std::string line;
-  std::vector<std::vector<i32>> subsets;
+  std::vector<std::unordered_set<i32>> subsets;
 
   while (std::getline(infile, line)) {
     if (line.empty()) {
@@ -146,32 +188,40 @@ std::vector<std::vector<i32>> parse_partition(const std::string &filename) {
       i32 start, end;
       iss >> start >> end;
 
-      std::vector<i32> subset;
-      // Dodaj zakres [start, end)
+      std::unordered_set<i32> subset;
+      // subset from range [start, end)
       for (i32 i = start; i < end; ++i) {
-        subset.push_back(i);
+        subset.insert(i);
       }
 
-      // Dodaj ewentualne dodatkowe wierzchołki
+      // extra vertices beyond the range
       i32 extra;
       while (iss >> extra) {
-        subset.push_back(extra);
+        subset.insert(extra);
       }
 
       if (!subset.empty()) {
         subsets.push_back(subset);
       }
     } else {
-      // Linia bez prefiksu: zakładamy że to lista wierzchołków
-      std::vector<i32> subset;
+      // no prefix - list of vertices for one subset
+      std::unordered_set<i32> subset;
       i32 v;
       while (iss >> v) {
-        subset.push_back(v);
+        subset.insert(v);
       }
       if (!subset.empty()) {
         subsets.push_back(subset);
       }
     }
+  }
+  // print subsets for debugging
+  for (const auto &subset : subsets) {
+    std::cout << "Subset: ";
+    for (const auto &v : subset) {
+      std::cout << v << " ";
+    }
+    std::cout << "\n";
   }
 
   return subsets;

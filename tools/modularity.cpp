@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
     std::cerr << "Partition file is required\n";
     return 1;
   }
-  std::vector<std::vector<i32>> partition;
+  std::vector<std::unordered_set<i32>> partition;
   try {
     partition = parse_partition(partition_file);
   } catch (std::exception &e) {

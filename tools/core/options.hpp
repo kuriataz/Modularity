@@ -4,6 +4,7 @@
 #include "graph.hpp"
 #include <cstdio>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 struct Option_Definition {
@@ -33,7 +34,8 @@ Parse_Result parse_arguments(i32 argc, char **argv, Option_Definition defs[],
                              i32 size);
 
 Graph parse_graph(const std::string &filename);
-std::vector<std::vector<i32>> parse_partition(const std::string &filename);
+std::vector<std::unordered_set<i32>>
+parse_partition(const std::string &filename);
 
 void print_graph(const Graph &graph);
 

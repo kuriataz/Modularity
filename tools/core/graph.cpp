@@ -15,7 +15,8 @@ Graph create_clique(i32 n) {
   graph.m = n * (n - 1) / 2;
   return graph;
 }
-double subset_modularity(const Graph &graph, const std::vector<i32> &a) {
+
+double subset_modularity(const Graph &graph, const std::unordered_set<i32> &a) {
   double degree_a = 0;
   for (const auto &v : a) {
     degree_a += graph.adjacency_list[v].size();
@@ -42,17 +43,17 @@ double subset_modularity(const Graph &graph, const std::vector<i32> &a) {
   return modularity;
 }
 
-double partition_modularity(const Graph &graph,
-                            const std::vector<std::vector<i32>> &partition) {
+double
+partition_modularity(const Graph &graph,
+                     const std::vector<std::unordered_set<i32>> &partition) {
   double total_modularity = 0;
   for (const auto &subset : partition) {
     total_modularity += subset_modularity(graph, subset);
   }
   return total_modularity;
 }
-double
-partition_modularity_star(const Graph &graph,
-                          const std::vector<std::vector<i32>> &partition) {
+double partition_modularity_star(
+    const Graph &graph, const std::vector<std::unordered_set<i32>> &partition) {
   double total_modularity = 0;
   for (const auto &subset : partition) {
     std::unordered_set<i32> subset_set(subset.begin(), subset.end());
