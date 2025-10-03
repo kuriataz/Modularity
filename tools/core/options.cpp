@@ -216,13 +216,13 @@ parse_partition(const std::string &filename) {
     }
   }
   // print subsets for debugging
-  for (const auto &subset : subsets) {
-    std::cout << "Subset: ";
-    for (const auto &v : subset) {
-      std::cout << v << " ";
-    }
-    std::cout << "\n";
-  }
+  // for (const auto &subset : subsets) {
+  //   std::cout << "Subset: ";
+  //   for (const auto &v : subset) {
+  //     std::cout << v << " ";
+  //   }
+  //   std::cout << "\n";
+  // }
 
   return subsets;
 }

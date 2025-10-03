@@ -76,11 +76,11 @@ double partition_modularity_star(
     double star_factor = (max_degree + 1.0) / subset_size;
     double subset_modularity_value = subset_modularity(graph, subset);
     total_modularity += (subset_modularity_value * star_factor);
-    std::cout << "Subset size: " << subset_size
-              << ", Max degree: " << max_degree
-              << ", Star factor: " << star_factor
-              << ", Subset modularity: " << subset_modularity_value
-              << std::endl;
+    // std::cout << "Subset size: " << subset_size
+    //           << ", Max degree: " << max_degree
+    //           << ", Star factor: " << star_factor
+    //           << ", Subset modularity: " << subset_modularity_value
+    //           << std::endl;
   }
   return total_modularity;
 }

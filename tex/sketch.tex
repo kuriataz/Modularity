@@ -8,23 +8,25 @@
 \usepackage{dirtytalk}
 \usepackage{graphicx}
 \usepackage{mathtools}
-\usepackage{unicode-math}
 \usepackage{enumitem}
 \usepackage{mathrsfs}
 \usepackage{float}
 \let\lll\relax
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{cleveref}
 \newtheorem{definition}{Definicja}
 \newtheorem{fact}{Fakt}
 \newtheorem{conclusion}{Wniosek}
 \newtheorem{lemma}{Lemat}
+\crefname{lemma}{Lemat}{Lematy}
 \newtheorem{theorem}{Twierdzenie}
 \addto\captionspolish{
   \renewcommand\tablename{Tabela}
-}
+  }
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage[numbers]{natbib}
 
 \title{Modularity}
 \author{Zofia Kuriata}
@@ -38,111 +40,141 @@
   \begin{definition}
     (\textbf{Graf}) Graf \(G\) prosty nieskierownay to para \((V, E)\), gdzie:
     \begin{itemize}
-      \item \(V\) - skończonym zbiór wierzchołków,
+      \item \(V\) - skończony zbiór wierzchołków,
       \item \(E\) - zbiór krawędzi \(\{u, v\}\), gdzie \(u, v \in V\), \(u \neq v\).
-    \end{itemize} 
+    \end{itemize}
   \end{definition}
   Za graf będziemy uważać graf prosty nieskierowany. Para \((V, E)\) będzie domyślnie utożsamiana z \(G\).\\
 
   \begin{definition}
-    (\textbf{Graf pełny}) Graf pełny \(K\) to graf, w którym każdy wierzchołek jest połączony z każdym innym wierzchołkiem dokładnie jedną krawędzią.\\
+    (\textbf{Graf pełny}) Graf pełny to \(K_n = (V,E)\), gdzie:
+    \begin{itemize}
+      \item \(V = \{1, 2, \ldots, n\}\),
+      \item \(E = \{\{i, j\} : 1 \leq i < j \leq n\}\).
+    \end{itemize}
   \end{definition}
-  Graf pełny o \(n\) wierzchołkach będziemy oznaczać jako \(K_n\).\\
+  Zatem graf pełny to graf, w którym każdy wierzchołek jest połączony z każdym innym dokładnie jedną krawędzią.\\
 
   \begin{definition}
-    (\textbf{Gwiazda / Star}) Gwiazda \(S\) to graf, w którym istnieje wierzchołek \(v\) (centralny) taki, że każdy inny wierzchołek jest połączony z \(v\) dokładnie jedną krawędzią oraz są to jedyne krawędzie w tym grafie.\\
+    (\textbf{Graf pełny dwudzielny}) Graf pełny dwudzielny to \(K_{s,t} = (S \cup T,E)\), gdzie:
+    \begin{itemize}
+      \item \(|S|=s\), \(|T|=t\) - zbiory rozłączne,
+      \item \(E = \{\{i, j\} : i \in S, j \in T\}\).
+    \end{itemize}
   \end{definition}
-  Gwiazdę o \(n\) wierzchołkach będziemy oznaczać jako \(S_n\).\\
 
   \begin{definition}
-    (\textbf{Ścieżka / Path}) Ścieżka \(P\) to graf, w którym istnieje ciąg wierzchołków \(v_0, v_1, \ldots, v_n\) taki, że jego jedyne krawędzie to \(\{v_i, v_{i+1}\}\), dla \(0 \leq i < n\).\\
+    (\textbf{Gwiazda / Star}) Gwiazda \(S_n\) to graf będący szczególnym przypadkiem grafu pełnego dwudzielnego - \(K_{1,n}\).
   \end{definition}
-  Ścieżkę o \(n\) wierzchołkach będziemy oznaczać jako \(P_n\).\\
+  Gwiazdę o \(n+1\) wierzchołkach będziemy oznaczać jako \(S_n\).\\
 
   \begin{definition}
-    Niech \(G = \left(V, E\right)\) będzie niepustym grafem oraz niech \(U \subseteq V\). Wtedy:
-    \[p_G(U) = 2e(U) \cdot vol(G) - {vol(U)}^2\]
-    Oraz jeśli \(\mathcal{A}\) jest partycją \(V\), to: 
-    \[mod_{\mathcal{A}}(G) = \sum_{A \in \mathcal{A}} \frac{p_G(A)}{vol(G)^2}\]
-    Wiemy, że \(vol(U) = 2e(U) + e(U, U^c)\), gdzie \(U^c = V \setminus U\) oraz \(e(U, U^c)\) to liczba krawędzi pomiędzy \(U\) a \(U^c\).\\
-    Wtedy:
-    \begin{align*}
-      p_G(U) &= \left(vol(U) - e(U, U^c)\right) \cdot vol(G) - vol(U) \cdot \left(vol(G)-vol(U^c)\right) \\
-      &= vol(U) \cdot vol(U^c) - e(U, U^c) \cdot vol(G) \text{ - symetric for \(U\) and \(U^c\)}
-    \end{align*} 
-    Analogicznie:
-    \[p_G^*(U) = \left(2e(U) \cdot vol(G) - {vol(U)}^2\right) \cdot \left(\frac{\Delta_U + 1}{|U|}\right)\]
-    \[mod_{\mathcal{A}}^*(G) = \sum_{A \in \mathcal{A}} \frac{p_G^*(A)}{vol(G)^2}\]
-    \begin{align*}
-      p_G(U) &= \left(vol(U) - e(U, U^c)\right) \cdot vol(G) - vol(U) \cdot \left(vol(G)-vol(U^c)\right) \\
-      &= \left(vol(U) \cdot vol(U^c) - e(U, U^c) \cdot vol(G)\right) \cdot \left(\frac{\Delta_A + 1}{|A|}\right)
-    \end{align*}
+    (\textbf{Ścieżka / Path}) Ścieżka \(P_n\) to graf, w którym istnieje ciąg wierzchołków \(v_1, \ldots, v_n\) taki, że jego jedyne krawędzie to \(\{v_i, v_{i+1}\}\), dla \(1 \leq i < n\).
+  \end{definition}
+
+  \begin{definition}
+    (\textbf{Stopień wierzchołka w grafie}) Stopień wierzchołka \(v\) w grafie \(G\) - \(deg_G(v) = |\{e \in E : v \in e\}|\).
+  \end{definition}
+  Zatem jest to liczba krawędzi incydentnych z wierzchołkiem \(v\).\\
+
+  \begin{definition}
+    (\textbf{Partycja zbioru wierzchołków}) Niech \(G = (V, E)\) będzie grafem. Partycja zbioru wierzchołków \(V\) to zbiór \(\mathcal{A} = \{A_1, A_2, \ldots, A_k\}\), gdzie:
+    \begin{itemize}
+      \item \(\forall_{i=1}^k A_i \subseteq V\),
+      \item \(\forall_{1 \leq i < j \leq k} A_i \cap A_j = \emptyset\),
+      \item \(\bigcup_{i=1}^{k} A_i = V\).
+    \end{itemize}
+    Element partycji \(A_i\) będziemy nazywać \textbf{społecznością}.
   \end{definition}
 
 \section{Oznaczenia}
   \begin{itemize}
-    \item \(vol(A) = \sum_{u \in A}deg_G(u) \text{ - suma stopni wierzchołków w danym podzbiorze}\)
+    \item \(e(A) = |\{ \{u, v\} \in E : u \in A, v \in A\}|\) - liczba krawędzi wewnętrznych w społeczności \(A\) w grafie \(G=(V,E)\),
+    \item \(e(G) = |E|\) - liczba krawędzi w grafie \(G\),
+    \item \(vol(A) = \sum_{u \in A}deg_G(u) \text{ - suma stopni wierzchołków w danym podzbiorze wierzchołków A}\).
+    \item \(vol(G) = 2e(G)\) - suma stopni wszystkich wierzchołków w grafie \(G\).
   \end{itemize}
 
 \section{Modularity}
-  Modularity jest jedną z miar jakości podziału grafu na społeczności. Nie uwzględnia ona struktury społeczności, a jedynie ich wielkość - skupia się na ich liczbie krawędzi oraz sumie stopni wierzchołków.\\
+  Modularity jest jedną z miar jakości podziału grafu na społeczności. Nie uwzględnia ona wewnętrznych struktur społeczności, a jedynie liczbę ich wewnętrznych krawędzi oraz sumę stopni ich wierzchołków.\\
   W ogólności, problem wyznaczenie modularity grafu jest NP-zupełny.
-  W celu wyznaczenia modularity grafu, należy rozpatrzeć wszystkie możliwe partycje wierzchołków grafu \(G\) i wybrać tę, której wartość \textit{modularity score} jest największa.\\
+  W celu wyznaczenia modularity grafu, należy rozpatrzeć wszystkie możliwe partycje zbioru wierzchołków grafu \(G\) i wybrać tę, której wartość \textit{modularity score} jest największa.\\
 
   \begin{definition}
-  (\textbf{Modularity score}) Niech \(G = (V, E)\) będzie grafem z co najmniej jedną krawędzią, \(\mathcal{A}\) będzie partycją wierzchołków \(G\).\\
-  Wtedy \textbf{modularity score} partycji \(\mathcal{A}\) w grafie \(G\) definiujemy jako:
-  \[
-  mod_{\mathcal{A}}(G) = \sum_{A \in \mathcal{A}} \left(\frac{e(A)}{e(G)} - {\left(\frac{vol(A)}{vol(G)}\right)}^2\right)
-  \]
-
-  \begin{itemize}
-    \item \(\frac{e(A)}{e(G)} \) - \textbf{EC} edge contribution
-    \item \(\left(\frac{e(A)}{e(G)} - {\left(\frac{vol(A)}{vol(G)}\right)}^2\right)\) - \textbf{DT} degree tax
-  \end{itemize}
+    (\textbf{Modularity społeczności}) Niech \(G = (V, E)\), będzie grafem z co najmniej jedną krawędzią, \(A \subseteq V\).\\
+    Wtedy \textbf{modularity społeczności} \(A\) w grafie \(G\) definiujemy jako:
+    \[
+    mod(A|G) = \frac{e(A)}{e(G)} - {\left(\frac{vol(A)}{vol(G)}\right)}^2.
+    \]
   \end{definition}
+  Pierwszy składnik \(\frac{e(A)}{e(G)}\) będziemy oznaczać jako \textbf{\(EC_G(A)\) - edge contribution}, a drugi \(- {\left(\frac{vol(A)}{vol(G)}\right)}^2\) jako \textbf{\(DT_G(A)\) -  degree tax}.\\
+
   Widzimy zatem, że w kontekście modularity, udział krawędzi w danym podzbiorze jest promowany, podczas gdy udział stopni wierzchołków jest karany.\\
+
+  \begin{definition}
+    (\textbf{Modularity score}) Niech \(G = (V, E)\), będzie grafem z co najmniej jedną krawędzią, \(\mathcal{A}\) będzie partycją zbioru wierzchołków \(G\).\\
+    Wtedy \textbf{modularity score} partycji \(\mathcal{A}\) w grafie \(G\) definiujemy jako:
+    \[
+    mod_{\mathcal{A}}(G) = \sum_{A \in \mathcal{A}} \left(\frac{e(A)}{e(G)} - {\left(\frac{vol(A)}{vol(G)}\right)}^2\right) = \sum_{A \in \mathcal{A}} mod(A|G).
+    \]
+  \end{definition}
+  Jako \textbf{\(EC_{\mathcal{A}}(G)\)} będziemy oznaczać sumę wszystkich \(EC_G(A)\) dla \(A \in \mathcal{A}\), a jako \textbf{\(DT_{\mathcal{A}}(G)\)} sumę wszystkich \(DT_G(A)\) dla \(A \in \mathcal{A}\).\\
+
+  Inne postacie \textit{modularity score}:
+  \begin{definition}
+    (\textbf{Modularity score}) Niech \(G = (V, E)\), będzie grafem z co najmniej jedną krawędzią, \(\mathcal{A}\) będzie partycją zbioru wierzchołków \(G\).\\
+    Wtedy \textbf{modularity score} partycji \(\mathcal{A}\) w grafie \(G\) definiujemy jako:
+    \[mod_{\mathcal{A}}(G) = \sum_{A \in \mathcal{A}} \frac{p_G(A)}{vol(G)^2},\]
+    gdzie:
+    \[p_G(A) = 2e(A) \cdot vol(G) - {vol(A)}^2.\]
+  \end{definition}
+
+  \begin{definition}
+    (\textbf{Modularity score}) Niech \(G = (V, E)\), będzie grafem z co najmniej jedną krawędzią, \(\mathcal{A}\) będzie partycją zbioru wierzchołków \(G\).\\
+    Wtedy \textbf{modularity score} partycji \(\mathcal{A}\) w grafie \(G\) definiujemy jako:
+    \[mod_{\mathcal{A}}(G) = \frac{1}{2m}\sum_{A \in \mathcal{A}} \sum_{u,v \in A} \left( \mathbb{1}_{\{u,v\} \in E} - \frac{deg_G(u) \cdot deg_G(v)}{2m}\right).\]
+  \end{definition}
 
   \begin{definition}
   (\textbf{Modularity grafu}) Niech \(G = (V, E)\) będzie grafem z co najmniej jedną krawędzią.\\
   Wtedy \textbf{modularity grafu} \(G\) definiujemy jako:
   \[
-  mod(G) = \max_{\mathcal{A} \in \mathcal{P}(V)} mod_{\mathcal{A}}(G)
+  mod(G) = \max_{\mathcal{A} \in \mathcal{P}(V)} mod_{\mathcal{A}}(G),
   \]
-  \(\mathcal{P}(V)\) - zbiór wszystkich partycji wierzchołków grafu \(G\).
+  gdzie \(\mathcal{P}(V)\) to zbiór wszystkich partycji zbioru wierzchołków grafu \(G\).\\
+
+  Dla grafu bez krawędzi przyjmujemy wartość \textbf{modularity} równą \textbf{0}.
   \end{definition}
 
-\subsection{Własności}
+\subsection{Własności} \label{własności}
   \begin{fact}
     Niech \(G = (V,E)\) będzie grafem z co najmniej jedną krawędzią, \(\mathcal{A}\) partycją wierzchołków \(G\). Wtedy:
-    \[
-      -\frac{1}{2} \leq mod_{\mathcal{A}}(G) < 1
-      \]
+    \[-\frac{1}{2} \leq mod_{\mathcal{A}}(G) < 1.\]
   \end{fact}
   \begin{itemize}
-    \item \textbf{Ograniczenie dolne}: rozważmy graf o dwóch wierzchołkach i jednej krawędzią oraz partycjonowanie, w którym każdy wierzchołek jest w osobnej społeczności.\\
+    \item \textbf{Ograniczenie dolne}: rozważmy graf o dwóch wierzchołkach i jednej krawędzi oraz partycjonowanie, w którym każdy wierzchołek jest w osobnej społeczności.\\
     Wtedy:
-    \[mod_{\mathcal{A}}(G) = 2\left(0 - \left(\frac{1}{2}\right)^2\right) = - \frac{1}{2}\]
-    \item \textbf{Ograniczenie górne}: suma \textbf{EC} wszystkich podzbiorów w dowolnej partycji jest na pewno nie większa niż 1. Ale z założenia, graf ma co najmniej jedną krawędź, więc suma \textbf{DT} w dowolnym partycjonowaniu jest dodatnia. Zatem modularity nie może osiągnąć wartości \textbf{1}.\\
-    \[mod_{\mathcal{A}}(G) < 1\]
+    \[mod_{\mathcal{A}}(G) = 2\left(0 - \left(\frac{1}{2}\right)^2\right) = - \frac{1}{2}.\]
+    \item \textbf{Ograniczenie górne}: suma \textbf{EC} wszystkich podzbiorów w dowolnej partycji jest na pewno nie większa niż 1. Ale z założenia, graf ma co najmniej jedną krawędź, więc suma \textbf{DT} w dowolnym partycjonowaniu jest dodatnia. Zatem modularity nie może osiągnąć wartości \textbf{1}:\\
+    \[mod_{\mathcal{A}}(G) < 1.\]
   \end{itemize}
 
   \begin{fact}
     Niech \(G = (V,E)\) będzie grafem z co najmniej jedną krawędzią, wtedy \(mod(G) \geq 0\).
   \end{fact}
-  Wartość modularity dla partycjonowania, w którym wszystkie wierzchołki należą do jednej społeczności jest równa \textbf{0} - takie partycjonowanie możemy osiągnąć dla dowolnego grafu.
+  Wartość \textit{modularity score} dla partycjonowania, w którym wszystkie wierzchołki należą do jednej społeczności jest równa \textbf{0} (\(EC = DT = 1\)). Takie partycjonowanie możemy osiągnąć dla dowolnego grafu.
 
   \begin{conclusion}
     Niech \(G = (V,E)\) będzie grafem z co najmniej jedną krawędzią, wtedy
-    \[0 \leq mod(G) < 1\]
+    \[0 \leq mod(G) < 1.\]
   \end{conclusion}
 
   \begin{fact}
-    Niech \(G = (V,E)\) będzie grafem z co najmniej jedną krawędzią, \(\mathcal{A}\) partycją, dla której \(mod_{\mathcal{A}}(G) = mod(G)\). Wtedy każda społeczność w partycji \(\mathcal{A}\) jest podgrafem spójnym.
+    Niech \(G = (V,E)\) będzie grafem, \(|V|=m\), \(m>0\), \(\mathcal{A}\) partycją, dla której \(mod_{\mathcal{A}}(G) = mod(G)\). Wtedy każda społeczność w partycji \(\mathcal{A}\) jest podgrafem spójnym.
   \end{fact}
 
   \begin{proof}
-    Załóżmy niewprost, że istnieje społeczność \(A\) będąca niespójnym podgrafem (z co najmniej jedną krawędzią) w partycji \(\mathcal{A}\). Niech \(A_1\) i \(A_2\) będą spójnymi podgrafami, takimi że \(A = A_1 \cup A_2\) oraz \(e(A) = e(A_1) + e(A_2)\).\\
+    Załóżmy niewprost, że istnieje społeczność \(A\) będąca niespójnym podgrafem (z co najmniej jedną krawędzią) w partycji \(\mathcal{A}\). Niech \(A_1\) i \(A_2\) będą podgrafami \(A\), takimi że \(A = A_1 \cup A_2\) oraz \(e(A) = e(A_1) + e(A_2)\).\\
     Wtedy \(vol(A) = vol(A_1) + vol(A_2)\) oraz:
     \[ mod(A|G) = \frac{e(A)}{e(G)} - {\left(\frac{vol(A)}{vol(G)}\right)}^2 \]
     \[ mod(A_1|G) + mod(A_2|G) = \frac{e(A_1)+e(A_2)}{e(G)} - {\left(\frac{vol(A_1)}{vol(G)}\right)}^2 - {\left(\frac{vol(A_2)}{vol(G)}\right)}^2 \]
@@ -154,9 +186,6 @@
       &= \frac{2vol(A_1)vol(A_2)}{4m^2} > 0
     \end{align*}
 
-
-
-
     Czyli partycjonowanie zapewniające maksymalną wartość modularity nie może zawierać społeczności będących niespójnymi podgrafami.\\
   \end{proof}
 
@@ -167,20 +196,20 @@
   \begin{proof}
     Załóżmy niewprost, że w partycji \(\mathcal{A}\) istnieje społeczność \(A\) będąca podgrafem składającym się z pojedynczego wierzchołka (\(v\)) stopnia 1 oraz społeczność \(B\) zawierająca sąsiada \(v\). Wtedy:
     \[
-      mod(A|G) = \frac{0}{e(G)} - {\left(\frac{1}{vol(G)}\right)}^2 = -\frac{1}{vol(G)^2}
+      mod(A|G) = \frac{0}{e(G)} - {\left(\frac{1}{vol(G)}\right)}^2 = -\frac{1}{vol(G)^2},
     \]
     \[
-      mod(B|G) = \frac{e(B)}{e(G)} - {\left(\frac{vol(B)}{vol(G)}\right)}^2
+      mod(B|G) = \frac{e(B)}{e(G)} - {\left(\frac{vol(B)}{vol(G)}\right)}^2.
     \]
     Natomiast
     \[
-      mod(A \cup B|G) = \frac{e(B)+1}{e(G)} - {\left(\frac{vol(B)+1}{vol(G)}\right)}^2
+      mod(A \cup B|G) = \frac{e(B)+1}{e(G)} - {\left(\frac{vol(B)+1}{vol(G)}\right)}^2.
     \]
     Zatem:
     \begin{align*}
       mod(A \cup B|G) - \left(mod(A|G)+mod(B|G)\right)
       &= \frac{1}{e(G)} - \left(\frac{2vol(B)}{vol(G)}\right)^2 \\
-      &= \frac{vol(G)-vol(B)}{4e(G)^2} > 0
+      &= \frac{vol(G)-vol(B)}{4e(G)^2} > 0.
     \end{align*}
   \end{proof}
 
@@ -191,35 +220,113 @@
 
   Od tej pory będziemy ignorować izolowane wierzchołki w naszych rozważaniach.
 
+  \begin{lemma}
+    \label{mod_eq}
+    Niech \(G = (V,E)\) będzie grafem z co najmniej jedną krawędzią. Wtedy nastepujące warunki są równoważne:
+    \begin{itemize}
+      \item \(mod(G) = 0\),
+      \item \(mod_{\mathcal{A}}(G) \leq 0\) dla każdej partycji \(\mathcal{A}\) zbioru wierzchołków \(V\) takiej że \(|\mathcal{A}| = 2\),
+      \item \(p_G(A) \leq 0\) dla każdego niepustego podzbioru \(A \subset V\).
+    \end{itemize}
+  \end{lemma}
+
+  \begin{proof}
+    Niech \(A \subseteq V\) będzie niepustym podzbiorem wierzchołków \(G\), \(A^c = V \setminus A\). Zauważmy, że \(vol(A) = 2e(A) + e(A, A^c)\). Wtedy:
+    \begin{align*}
+      p_G(A) &= \left(vol(A) - e(A, A^c)\right) \cdot vol(G) - vol(A) \cdot \left(vol(G)-vol(A^c)\right) \\
+      &= vol(A) \cdot vol(A^c) - e(A, A^c) \cdot vol(G) \\
+      &= p_G(A^c).
+    \end{align*}
+    Niech \(\mathcal{A} = \{A, A^c\}\) będzie partycją \(V\). Wtedy:
+    \[mod_{\mathcal{A}}(G) = \frac{p_G(A)}{vol(G)^2} + \frac{p_G(A^c)}{vol(G)^2} = \frac{2p_G(A)}{vol(G)^2}.\]
+
+  Widzimy zatem, że jeśli istnieje podzbiór \(A \subset V\), dla którego \(p_G(A) > 0\), to modularity grafu \(G\) jest większa od zera oraz oczywiście istnieje partycja \(\mathcal{A}\) rozmiaru 2, dla której \(mod_{\mathcal{A}}(G) > 0\).\\
+  \end{proof}
+
 \subsection{Wady}
   Klasyczna wersja modularuty ma kilka wad i ograniczeń, które powodują otrzymywanie nieintuicyjnych wartości dla pewnych rodzajów grafów.
   \begin{itemize}
-    \item \textbf{Struktura społeczności}: modularity nie uwzględnia struktury społeczności, a jedynie ich wielkość. W związku z tym zarówno społeczność izomorficzna z gwiazdą, jak i społeczność izomorficzna ze ścieżką tego samego rozmiaru, wbrew intuicji, będzie miała tę samą wartość modularity.
-    \item \textbf{Resolution limit}: w pewnych przypadkach, małe społeczności mogą zostać niewykryte. Weżmy np. graf G taki, że zawira on dwie, połączone jedną krawędzią kliki \(K_k\). Okazuje się, że jeśli \({k\choose2} < \frac{\sqrt{2}\sqrt{|E|}-1}{2}\), to w partycjonowaniu \(\mathcal{A}\), dla którego \(mod_{\mathcal{A}}(G)=mod(G)\), obie kliki należą do jednej społeczności. Jest to sprzeczne z naszą intuicją.
-    \item \textbf{Nienaturalnie duże wartości}: modularity przyjmuje bardzo duże wartośći dla niektórych klas grafów, które nie mają wyraźnej struktury społecznościowej. Jedną z takich klas jest klasa krat.
+    \item \textbf{Struktura społeczności}: modularity nie uwzględnia wewnętrznej struktury społeczności. W związku z tym, zarówno społeczność izomorficzna z gwiazdą, jak i społeczność izomorficzna ze ścieżką tego samego rozmiaru, wbrew intuicji, będzie miała tę samą wartość \textit{modularity score}.
+    \item \textbf{Resolution limit}: w pewnych przypadkach, małe społeczności mogą zostać niewykryte. Weźmy np. graf G taki, że zawiera on dwie, połączone jedną krawędzią kliki \(K_k\). Okazuje się, że jeśli \({k\choose2} < \frac{\sqrt{2}\sqrt{|E|}-1}{2}\), to w partycjonowaniu \(\mathcal{A}\), dla którego \(mod_{\mathcal{A}}(G)=mod(G)\), obie kliki należą do jednej społeczności \cite[p.8]{K24}. Jest to sprzeczne z naszą intuicją.
+    \item \textbf{Nienaturalnie duże wartości}: modularity przyjmuje bardzo duże wartości dla niektórych klas grafów, które nie mają wyraźnej struktury społecznościowej. Jedną z takich klas jest klasa krat \cite[p.10]{K24}.
   \end{itemize}
 
 \subsection{Modularity Star}
-  Jedną z alternatyw dla klasycznej wersji modularity jest \textbf{modularity star}. Modyfikacja polega na przemnżeniu wartości modularity partycji przez \textbf{star factor} - stosunek maksymalnego wewnętrznego stopnia wierzchołka w danej społeczności powiększonego o 1 do liczby wierzchołków w tej społeczności. Obliczenie maksymalnego stopnia nie jest kosztowne obliczeniowo (w przeciwieństwie do obliczania średnicy społecznośći). Modularity star promuje społeczności o bardziej zwięzłej strukturze (a zatem te o stosunkowo niewielkiej średnicy), przez co dobrze radzi sobie z problemami opisanymi powyżej.\\
+  Jedną z alternatyw dla klasycznej wersji modularity jest \textbf{modularity star}. Modyfikacja polega na przemnożeniu wartości modularity partycji przez \textbf{star factor} - stosunek maksymalnego wewnętrznego stopnia wierzchołka w danej społeczności powiększonego o 1 do liczby wierzchołków w tej społeczności. Obliczenie maksymalnego stopnia nie jest kosztowne obliczeniowo (w przeciwieństwie do obliczania średnicy społeczności). Modularity star promuje społeczności o bardziej zwięzłej strukturze (a zatem te o stosunkowo niewielkiej średnicy), przez co dobrze radzi sobie z problemami opisanymi powyżej.\\
 
   \begin{definition}
-    (\textbf{Modularity star score}) Niech \(G = (V, E)\) będzie grafem z co najmniej jedną krawędzią, \(\mathcal{A}\) będzie partycją wierzchołków \(G\).\\
+    (\textbf{Modularity star score}) Niech \(G = (V, E)\) będzie grafem z co najmniej jedną krawędzią, \(\mathcal{A}\) będzie partycją \(V\).\\
     Wtedy \textbf{modularity star score} partycji \(\mathcal{A}\) w grafie \(G\) definiujemy jako:
     \[
-    mod^*_{\mathcal{A}}(G) = \sum_{A \in \mathcal{A}} \left(\frac{e(A)}{e(G)} - {\left(\frac{vol(A)}{vol(G)}\right)}^2\right) \cdot \left(\frac{\Delta_A + 1}{|A|}\right)
+    mod^*_{\mathcal{A}}(G) = \sum_{A \in \mathcal{A}} \left(\frac{e(A)}{e(G)} - {\left(\frac{vol(A)}{vol(G)}\right)}^2\right) \cdot \left(\frac{\Delta_A + 1}{|A|}\right),
     \]
-    \(\Delta_A\) - maksymalny wewnętrzny stopień wierzchołka w społeczności \(A\).\\
-    \(|A|\) - liczba wierzchołków w społeczności \(A\).\\
+    gdzie:
+    \begin{itemize}
+      \item[-] \(\Delta_A\) - maksymalny wewnętrzny stopień wierzchołka w społeczności \(A\),
+      \item[-] \(|A|\) - liczba wierzchołków w społeczności \(A\).\\
+    \end{itemize}
+  \end{definition}
+
+  Inne postacie \textit{modularity star score}:
+  \begin{definition}
+    (\textbf{Modularity star score}) Niech \(G = (V, E)\), będzie grafem z co najmniej jedną krawędzią, \(\mathcal{A}\) będzie partycją zbioru wierzchołków \(G\).\\
+    Wtedy \textbf{modularity star score} partycji \(\mathcal{A}\) w grafie \(G\) definiujemy jako:
+    \[mod_{\mathcal{A}}^*(G) = \sum_{A \in \mathcal{A}} \frac{p_G^*(A)}{vol(G)^2},\]
+    gdzie:
+    \[p_G^*(A) = \left(2e(A) \cdot vol(G) - {vol(A)}^2\right) \cdot \left(\frac{\Delta_A + 1}{|A|}\right).\]
+  \end{definition}
+      Niech \(G = \left(V, E\right)\) będzie niepustym grafem oraz niech \(U \subseteq V\). Wtedy:
+    Oraz jeśli \(\mathcal{A}\) jest partycją \(V\), to:
+    Wiemy, że \(vol(U) = 2e(U) + e(U, U^c)\), gdzie \(U^c = V \setminus U\) oraz \(e(U, U^c)\) to liczba krawędzi pomiędzy \(U\) a \(U^c\).\\
+    Wtedy:
+
+
+    \begin{align*}
+      p_G(U) &= \left(vol(U) - e(U, U^c)\right) \cdot vol(G) - vol(U) \cdot \left(vol(G)-vol(U^c)\right) \\
+      &= \left(vol(U) \cdot vol(U^c) - e(U, U^c) \cdot vol(G)\right) \cdot \left(\frac{\Delta_U + 1}{|U|}\right).
+    \end{align*}
+
+  \begin{definition}
+    (\textbf{Modularity star score}) Niech \(G = (V, E)\), będzie grafem z co najmniej jedną krawędzią, \(\mathcal{A}\) będzie partycją zbioru wierzchołków \(G\).\\
+    Wtedy \textbf{modularity star score} partycji \(\mathcal{A}\) w grafie \(G\) definiujemy jako:
+    \[mod_{\mathcal{A}}^*(G) = \frac{1}{2m}\sum_{A \in \mathcal{A}} \sum_{u,v \in A} \left( \mathbb{1}_{\{u,v\} \in E} - \frac{deg_G(u) \cdot deg_G(v)}{2m}\right) \cdot \left(\frac{\Delta_A + 1}{|A|}\right).\]
   \end{definition}
 
   \begin{definition}
     (\textbf{Modularity star grafu}) Niech \(G = (V, E)\) będzie grafem z co najmniej jedną krawędzią.\\
     Wtedy \textbf{modularity star grafu} \(G\) definiujemy jako:
     \[
-    mod^*(G) = \max_{\mathcal{A} \in \mathcal{P}(V)} mod^*_{\mathcal{A}}(G)
+    mod^*(G) = \max_{\mathcal{A} \in \mathcal{P}(V)} mod^*_{\mathcal{A}}(G),
     \]
-    \(\mathcal{P}(V)\) - zbiór wszystkich partycji wierzchołków grafu \(G\).
+    gdzie \(\mathcal{P}(V)\) to zbiór wszystkich partycji zbioru wierzchołków grafu \(G\).
   \end{definition}
+
+  \cref{mod_eq} przenosi się również na \textbf{modularity star}:
+  \begin{lemma}
+    \label{mod_star_eq}
+    Niech \(G = (V,E)\) będzie grafem z co najmniej jedną krawędzią. Wtedy nastepujące warunki są równoważne:
+    \begin{itemize}
+      \item \(mod^*(G) = 0\),
+      \item \(mod^*_{\mathcal{A}}(G) \leq 0\) dla każdej partycji \(\mathcal{A}\) zbioru wierzchołków \(V\) takiej że \(|\mathcal{A}| = 2\),
+      \item \(p_G^*(A) \leq 0\) dla każdego niepustego podzbioru \(A \subset V\).
+    \end{itemize}
+  \end{lemma}
+
+  \begin{proof}
+    \begin{align*}
+      p_G^*(A) &= \left(\left(vol(A) - e(A, A^c)\right) \cdot vol(G) - vol(A) \cdot \left(vol(G)-vol(A^c)\right)\right) \cdot \frac{\Delta_A + 1}{|A|} \\
+      &= \left(vol(A) \cdot vol(A^c) - e(A, A^c) \cdot vol(G) \right) \cdot \frac{\Delta_A + 1}{|A|}
+    \end{align*}
+    Zatem:
+    \[
+      p_G^*(A^c) = p_G^*(A) \cdot \frac{\Delta_{A^c} + 1}{|A^c|} \cdot \frac{|A|}{\Delta_A + 1}.
+    \]
+
+    Niech \(\mathcal{A} = \{A, A^c\}\) będzie partycją \(V\). Wtedy:
+    \[mod_{\mathcal{A}}^*(G) = \frac{p_G^*(A)}{vol(G)^2} + \frac{p_G^*(A^c)}{vol(G)^2} = \frac{p_G^*(A)\cdot \frac{(\Delta_A^c + 1) \cdot |A| \cdot (\Delta_A + 1) \cdot |A^c|}{(\Delta_A + 1) \cdot |A^c|}}{vol(G)^2}.\]
+
+    \(\frac{(\Delta_A^c + 1) \cdot |A| \cdot (\Delta_A + 1) \cdot |A^c|}{(\Delta_A + 1) \cdot |A^c|} > 0,\) więc warunki lematu są równoważne.\\
+  \end{proof}
 
   I w tym momencie pojawia się ważne (wciąż otwarte) pytanie:
   \[\text{Czy dla każdego grafu $G$} \mod^*(G) \leq mod(G)?\]
@@ -227,7 +334,7 @@
 \section{Otwarta nierówność (bardzo nieoficjalna wersja)}
   Celem jest znalezienie grafu \(G\) takiego, że \(mod^*(G) > mod(G)\).\\
   Oczywiście partycja maksymalizująca \(mod(G)\) (nazwijmy ją \(\mathcal{B}\)) musi być różna od tej, która maksymalizuje \(mod^*(G)\) (nazwijmy ją \(\mathcal{A}\)).\\
-  Zatem w grafie \(G\) musi istnieć partycjonowanie \(\mathcal{A}\), w którym wartość \textit{modularity\_score}, co najmniej jednej społecznośći (nazwijmy ją \(A\)), jest mniejsza od 0 i jednocześnie jej \textit{star\_factor} jest mniejszy od 1. Jeśli pozostałe społeczności osiągną wystarczająco wysokie \textit{modularity\_score}, to może się okazać, że dzięki zmniejszeniu bezwzględnej wartości \(mod\_score(A)\) (poprzez \textit{star\_factor}), \(mod^*_{\mathcal{A}}(G) > mod(G)\).\\
+  Zatem w grafie \(G\) musi istnieć partycjonowanie \(\mathcal{A}\), w którym wartość \textit{modularity\_score}, co najmniej jednej społeczności (nazwijmy ją \(A\)), jest mniejsza od 0 i jednocześnie jej \textit{star\_factor} jest mniejszy od 1. Jeśli pozostałe społeczności osiągną wystarczająco wysokie \textit{modularity\_score}, to może się okazać, że dzięki zmniejszeniu bezwzględnej wartości \(mod\_score(A)\) (poprzez \textit{star\_factor}), \(mod^*_{\mathcal{A}}(G) > mod(G)\).\\
 
   Okazuje się jednak, że znalezienie grafu \(G\) jest trudne, a może nawet nierealne.\\
 
@@ -240,7 +347,7 @@
     \item pewną liczbę krawędzi pomiędzy \(T \in \mathcal{T}\) a \(H \in \mathcal{H}\).
   \end{itemize}
 
-  Udało mi się znaleźć takie grafy i ich partycjonowania, że \(mod^*(G)\) było minimalnie mniejsze niż \(mod(G)\). Wraz ze wzrostem liczbności \(\mathcal{T}\), różnica się zmniejsza. Niestety, wydaje się jednak, że w ten sposób nie dojdziemy do momentu, w którym się odwróci, ponieważ wraz ze zmniejszaniem róznicy pomiędzy \(mod^*_{\mathcal{A}}(G)\) a \(mod_{\mathcal{B}}(G)\) maleje również różnica pomiędzy \(mod^*_{\mathcal{A}}(G)\) a \(mod_{\mathcal{A}}(G)\). A kiedy ta różnica stanie się \(\leq 0\), to nasze rozważania tracą sens.\\
+  Udało mi się znaleźć takie grafy i ich partycjonowania, że \(mod^*(G)\) było minimalnie mniejsze niż \(mod(G)\). Wraz ze wzrostem liczebności \(\mathcal{T}\), różnica się zmniejsza. Niestety, wydaje się jednak, że w ten sposób nie dojdziemy do momentu, w którym się odwróci, ponieważ wraz ze zmniejszaniem różnicy pomiędzy \(mod^*_{\mathcal{A}}(G)\) a \(mod_{\mathcal{B}}(G)\) maleje również różnica pomiędzy \(mod^*_{\mathcal{A}}(G)\) a \(mod_{\mathcal{A}}(G)\). A kiedy ta różnica stanie się \(\leq 0\), to nasze rozważania tracą sens.\\
 
   Udało mi się zauważyć pewną zależność pomiędzy \(|\mathcal{T}|\) a \(|T|\).\\
 
@@ -256,36 +363,79 @@
 
 
 \section{Grafy pełne}
-  Zarówno \textit{modularity} jak i \textit{modularity star} dla grafów pełnych \(K_n\) przyjmują wartość \textbf{0}. Jest tak, ponieważ jedyne sensowne partycjonowanie kliki to takie, w którym wszystkie wierzchołki należą do jednej społeczności: \(EC = DT = 1\).\\
-  Zastanówmy się jednak jak dużo krawędzi trzeba z kliki usunąć aby jej \(mod\) (FIONA) oraz \(mod^*\) były większe od zera.\\
+  \begin{fact}
+    \label{clique_mod}
+    Niech \(K_n\) będzie kliką o \(n\) wierzchołkach, \(n \geq 1\). Wtedy:
+    \[mod(K_n) = 0,\]
+    \[mod^*(K_n) = 0.\]
+  \end{fact}
+  \begin{proof}
+    Dla \(n=1\) mamy \(mod(K_1) = mod^*(K_1) = 0\), ponieważ graf nie zawiera krawędzi.\\
+    Załóżmy więc, że \(n \geq 2\). Niech \(\mathcal{A} = \{A_1, A_2, \ldots, A_k\}\), \(k \leq n\) będzie k-elementową partycją zbioru wierzchołków \(K_n\), wtedy:
+    \begin{align*}
+      mod_{\mathcal{A}}(K_n) &= \sum_{i=1}^k \left(\frac{{|A_i| \choose 2}}{{n \choose 2}} - {\left(\frac{|A_i|(n-1)}{n(n-1)}\right)}^2\right) \\
+      &= \sum_{i=1}^k \left(\frac{|A_i|(|A_i|-1)}{n(n-1)} - {\left(\frac{|A_i|}{n}\right)}^2\right) \\
+      &= \sum_{i=1}^k \frac{|A_i|^2 - n|A_i|}{n^2(n-1)} \\
+      &= \frac{\sum_{i=1}^k |A_i|^2 - n\sum_{i=1}^k |A_i|}{n^2(n-1)} \\
+      &= \frac{1}{n^2(n-1)} \cdot \sum_{i=1}^k |A_i|^2 - \frac{1}{n-1}.
+    \end{align*}
+    Zauważmy, że \(\forall_{A \in \mathcal{A}} \Delta_{A_i} = |A_i| - 1\), co sprawia, że \(mod_{\mathcal{A}}(K_n) = mod_{\mathcal{A}}^*(K_n)\).\\
+    \(mod_{\mathcal{A}}(K_n)\) jest maksymalne, gdy \(\sum_{i=1}^k |A_i|^2\) osiąga maksimum, a dzieje się to dla \(k=1\) (\((a+b)^2 \geq a^2 + b^2\)).\\
+    
+    Modularity score jednoelementowej partycji wynosi 0.\\
+  \end{proof}
+
+  \begin{conclusion}
+    (Fakt \ref{clique_mod} oraz rozdział \ref{własności})\\
+    Dla każdej liczby naturalnej \(n \leq 3\), \(mod(K_n) = mod^*(K_n) = 0\).\\
+  \end{conclusion}
+
+  Zastanówmy się jednak jak dużo krawędzi trzeba z kliki usunąć aby jej \(mod\) \cite{MS23} oraz \(mod^*\) były większe od zera.\\
 
   \begin{fact}
     Dla każdej liczby naturalnej \(n \geq 4\) istnieje n-wierzchołkowy graf \(G\), taki, że \(mod(G) > 0\) oraz \(mod^*(G) > 0\).\\
   \end{fact}
   \begin{proof}
-    Wystarczy rozważyć ścieżkę \(P_n\) oraz jej partycję, na dwie społeczności \(A_1\) i \(A_2\), gdzie \(|A_1| = \lceil\frac{n}{2}\rceil\) i \(|A_2| = \lfloor\frac{n}{2}\rfloor\).\\
+    Wystarczy rozważyć ścieżkę \(P_n\) oraz partycję \(\mathcal{A}\) zbioru jej wierzchołków, na dwie spójne społeczności \(A_1\) i \(A_2\), gdzie \(|A_1| = \lceil\frac{n}{2}\rceil\) i \(|A_2| = \lfloor\frac{n}{2}\rfloor\).\\
+
+    Jako pierwszy rozpatrzmy przypadek, gdy \(n\) jest liczbą parzystą. Wtedy:
+    \[mod_{\mathcal{A}}(P_n) = 2\cdot\left(\frac{\frac{n-2}{2}}{n-1} - {\left(\frac{1}{2}\right)}^2\right) = \frac{n-2}{n-1}-\frac{1}{2}=\frac{n-3}{2n-4}>0 \text{, dla } n \geq 4,\]
+    \[mod_{\mathcal{A}}^*(P_n) = 2\cdot\left(\frac{\frac{n-2}{2}}{n-1} - {\left(\frac{1}{2}\right)}^2\right) \cdot \frac{3}{\frac{n}{2}}=\frac{n-3}{2n-4} \cdot \frac{6}{n} > 0\text{, dla } n \geq 4.\]
+
+    Teraz załóżmy, że \(2\nmid n\):
+    \begin{align*}
+      mod_{\mathcal{A}}(P_n) &= \frac{\frac{n-1}{2}}{n-1} - {\left(\frac{\frac{n+1}{2}\cdot 2-1}{2(n-1)}\right)}^2 + \frac{\frac{n-3}{2}}{n-1} - {\left(\frac{\frac{n-1}{2}\cdot 2-1}{2(n-1)}\right)}^2 \\
+      &= \frac{4(n-1)(n-2)-2n^2+4n-4}{4(n-1)^2} \\
+      &= \frac{n^2-4n+2}{2(n-1)^2}>0 \text{, dla } n \geq 4,
+    \end{align*}
+    \begin{align*}
+      mod_{\mathcal{A}}^*(P_n) &\geq \left(\frac{\frac{n-1}{2}}{n-1} - {\left(\frac{\frac{n+1}{2}\cdot 2-1}{2(n-1)}\right)}^2\right) \cdot \frac{2}{\frac{n+1}{2}} + \left(\frac{\frac{n-3}{2}}{n-1} - {\left(\frac{\frac{n-1}{2}\cdot 2-1}{2(n-1)}\right)}^2\right) \cdot \frac{1}{\frac{n-1}{2}} \\
+      &= \frac{n^2-4n+2}{(n+1)(n-1)^2} + \frac{-1}{(n-1)^3}\\
+      &= \frac{(n-1)(n^2-4n+2)}{(n+1)(n-1)^3}\\
+      &= \frac{n^2-4n+2}{(n+1)(n-1)^2}>0 \text{, dla } n \geq 4.
+    \end{align*}
   \end{proof}
 
   Możemy zatem zdefiniować funkcję \textbf{\(f(n)\)}, która dla grafu \(K_n\) zwraca minimalną liczbę krawędzi, które należy usunąć, aby \textbf{modularity} nowo otrzymanego grafu była większa od zera.\\
 
-  Analogicznie niech \textbf{\(f^*(n)\)} będzie funkcją, która dla grafu \(K_n\) zwraca minimalną liczbę krawędzi, które należy usunąć, aby \textbf{modularity star} nowo otrzymanego grafu była większa od zera.\\
+  Analogicznie, niech \textbf{\(f^*(n)\)} będzie funkcją, która dla grafu \(K_n\) zwraca minimalną liczbę krawędzi, które należy usunąć, aby \textbf{modularity star} nowo otrzymanego grafu była większa od zera.\\
 
   \begin{fact}
     Dla każdej liczby naturalnej \(n \geq 4\), \(f(n) = \lfloor\frac{n}{2}\rfloor + 1\). (FIONA)
   \end{fact}
 
   \begin{proof}
-    Niech \(G\) będzie grafem o \(n\) wierzchołkach. Niech \(\mathcal{A} = \{A, B\}\) będzie partycją wierzchołków grafu \(G\) taką, że \(|A| = \lceil\frac{n}{2}\rceil\) oraz \(|B| = \lfloor\frac{n}{2}\rfloor\). Niech \(k = \lfloor\frac{n}{2}\rfloor + 1\). Pokażemy, że po usunięciu \(k\) krawędzi z pomiędzy \(A\) i \(B\) \(mod(G) > 0\).\\
+    Niech \(G=(V,E)\) będzie grafem o \(n\) wierzchołkach. Niech \(\mathcal{A} = \{A, B\}\) będzie partycją \(V\) taką, że \(|A| = \lceil\frac{n}{2}\rceil\) oraz \(|B| = \lfloor\frac{n}{2}\rfloor\). Niech \(k = \lfloor\frac{n}{2}\rfloor + 1\). Pokażemy, że po usunięciu \(k\) krawędzi z pomiędzy \(A\) i \(B\) \(mod(G) > 0\).\\
 
     Jako pierwszy rozpatrzmy przypadek, gdy \(n\) jest liczbą parzystą. Wtedy \(k = \frac{n+2}{2}\).
     Liczba krawędzi w grafie \(G\) jest równa \(m = {n\choose2} - k = \frac{n^2-2n-2}{2}\).
 
-    \[mod(G) = 2\cdot\left(\frac{{\frac{n}{2}\choose2}}{m} - {\left(\frac{1}{2}\right)}^2\right) = \frac{1}{2}+\frac{1}{n^2-2n-2}-\frac{1}{2}=\frac{1}{n^2-2n-2}>0\]
+    \[mod_\mathcal{A}(G) = 2\cdot\left(\frac{{\frac{n}{2}\choose2}}{m} - {\left(\frac{1}{2}\right)}^2\right) = \frac{1}{2}+\frac{1}{n^2-2n-2}-\frac{1}{2}=\frac{1}{n^2-2n-2}>0\]
 
     Teraz załóżmy, że \(n\) jest liczbą nieparzystą. Wtedy \(k = \frac{n+1}{2}\). Liczba krawędzi w grafie \(G\) jest równa \(m = {n\choose2} - k = \frac{n^2-2n-1}{2}\).
 
     \begin{align*}
-      mod(G) &= \left(\frac{{\frac{n+1}{2}\choose2}}{m} - {\left(\frac{\frac{n+1}{2}\cdot(n-1)-k}{2m}\right)}^2\right) + \left(\frac{{\frac{n-1}{2}\choose2}}{m} - {\left(\frac{\frac{n-1}{2}\cdot(n-1)-k}{2m}\right)}^2\right) \\
+      mod_\mathcal{A}(G) &= \left(\frac{{\frac{n+1}{2}\choose2}}{m} - {\left(\frac{\frac{n+1}{2}\cdot(n-1)-k}{2m}\right)}^2\right) + \left(\frac{{\frac{n-1}{2}\choose2}}{m} - {\left(\frac{\frac{n-1}{2}\cdot(n-1)-k}{2m}\right)}^2\right) \\
       &= \frac{n-3}{16m^2} + \frac{(n-3)(n^3-4n^2+n+1)}{16m^2} \\
       &= \frac{(n-3)(n^3-4n^2+n+1)}{16m^2} > 0 \text{, dla } n \geq 4
     \end{align*}
@@ -336,13 +486,51 @@
   \end{proof}
 
   \subsection{Theorem 1.3}
+    \begin{lemma}
+      Niech \(\mathcal{A}=\{A, A'\}\) będzie partycją zbioru wierzchołków grafu \(G\) o \(m \geq 2\) krawędziach, taką, że \(mod_{\mathcal{A}}(G) \geq 0\) oraz \(e_G(A, A') > 0\). Niech \(G'\) będzie grafem powstałym z \(G\) poprzez usunięcie jednej krawędzi należącej do \(e_G(A, A')\). Wtedy \(mod_{\mathcal{A}}(G') > mod_{\mathcal{A}}(G)\).
+    \end{lemma}
+
+    \begin{proof}
+      \[EC(G) = \frac{e_G(A)+e_G(A')}{m}\]
+      \[EC(G') = \frac{e_G(A)+e_G(A')}{m-1}\]
+
+      Niech \(q = vol_G(A)-m = m-vol_G(A')\). Wtedy:
+      \[DT(G) = \frac{(m+q)^2 + (m-q)^2}{4m^2} = \frac{m^2+q^2}{2m^2}\]
+      \[DT(G') = \frac{(m+q-1)^2 + (m-q-1)^2}{4(m-1)^2} = \frac{m^2+q^2+1-2m}{2(m-1)^2}\]
+
+      Zatem:
+      \[EC(G)-EC(G') = \frac{e_G(A)+e_G(A')}{m(m-1)}\]
+      \[DT(G)-DT(G') = \frac{q^2(1-2m)}{2m^2(m-1)^2}\]
+      \begin{align*}
+        mod_{\mathcal{A}}(G') - mod_{\mathcal{A}}(G)\\
+        &= \frac{e_G(A)+e_G(A')}{m(m-1)} - \frac{q^2(2m-1)}{2m^2(m-1)^2}\\
+        &= \frac{(e_G(A)+e_G(A'))(2m(m-1)) - q^2(2m-1)}{2m^2(m-1)^2}
+      \end{align*}
+
+      Wiemy, że \(mod_{\mathcal{A}}(G) \geq 0\), zatem:
+      \[\frac{e_G(A)+e_G(A')}{m} = EC(G) \geq DT(G) = \frac{m^2+q^2}{2m^2}\]
+      \[2m(e_G(A)+e_G(A')) \geq (m^2+q^2)\]
+      
+      Czyli:
+      \begin{align*}
+        mod_{\mathcal{A}}(G') - mod_{\mathcal{A}}(G) \geq \frac{(m^2+q^2)(m-1)- q^2(2m-1)}{2m^2(m-1)^2}\\
+        &= \frac{m^3-m^2-mq^2}{2m^2(m-1)^2}
+      \end{align*}
+
+      Wiemy, że \(0 \leq q \leq m-1\) (\(e_G(A, A') > 0\)). Zatem:
+      \[m^3-m^2-mq^2 \geq m^3-m^2-m(m-1)^2 = m(m-1) > 0\]
+      oraz:
+      \[mod_{\mathcal{A}}(G') - mod_{\mathcal{A}}(G) \geq \frac{m(m-1)}{2m^2(m-1)^2} = \frac{1}{2m(m-1)} \geq 0\]
+    \end{proof}
+    Zatem, zgodonie z intuicją, usunięcie krawędzi spomiędzy dwóch partycji zwiększa wartość modularity. (NAPISAĆ TO ŁADNIEJ)
+
     Oznaczenia:
     \begin{itemize}
       \item \(\delta^{-}(G)\) - minimalna liczba krawędzi, które należy usunąć z grafu \(G\), aby \(mod(G) > 0\).
       \item \(\delta^{+}(G)\) - minimalna liczba krawędzi, które należy dodać do grafu \(G\), aby \(mod(G) > 0\).
       \item \(\delta(G)\) - minimalna liczba krawędzi, które należy dodać lub usunąć z grafu \(G\), aby \(mod(G) > 0\).
     \end{itemize}
-    Niech \(G\) będzie grafem pełnym dwudzielnym \(K_{s,t}\) (\(s \leq t\)) oraz niech \(\mathcal{A}\) będzie partycją wierzchołków \(G\) przedstawioną na schematach poniżej.\\
+    Niech \(G\) będzie grafem pełnym dwudzielnym \(K_{s,t}\) (\(s \leq t\)) oraz niech \(\mathcal{A}\) będzie partycją zbioru wierzchołków \(G\) przedstawioną na schematach poniżej.\\
 
     \begin{enumerate}[label=(\alph*)]
       \item Jeśli \(s > 1\), to \(\delta^{-}(G) = 1\).
@@ -369,4 +557,8 @@
       \item Jeśli \(s = 1\) i \(t \geq 4\) albo \(s \geq 2\), to \(\delta(G) = 1\). Jeśli (s,t) = (1,2), to \(\delta(G) = \infty\). A gdy (s,t) = (1,3), to \(\delta(G) = 2\).
     \end{enumerate}
 
+    \begin{thebibliography}{9}
+      \bibitem{MS23} Colin McDiarmid, Fiona Skerman. \emph{Modularity of nearly complete graphs and bipartite graphs}, 2023.
+      \bibitem{K24} Mikołaj Krupiński. \emph{Algorytmy wykrywania społeczności w sieciach oparte na różnych wersjach definicji modularity}, 2024.
+    \end{thebibliography}
 \end{document}
