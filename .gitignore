@@ -4,3 +4,10 @@ mod
 gen?
 bip?
 *.txt
+xgen?.cpp
+*.py
+Hania/
+semi/
+presentation/
+graphs/
+latexdiff/

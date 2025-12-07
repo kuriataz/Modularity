@@ -23,8 +23,6 @@ struct Graph {
   }
 };
 
-Graph create_clique(i32 n);
-
 double subset_modularity(const Graph &graph, const std::unordered_set<i32> &a);
 double
 partition_modularity(const Graph &graph,

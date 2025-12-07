@@ -65,11 +65,10 @@ Graph parse_graph(const std::string &filename) {
     std::string prefix;
     linestream >> prefix;
 
+    // clique
     if (prefix == "k") {
       i32 start, end;
       linestream >> start >> end;
-      // std::cout << "Creating clique from " << start << " to " << end
-      //           << std::endl;
       for (i32 i = start; i < end; ++i) {
         for (i32 j = i + 1; j < end; ++j) {
           graph.adjacency_list[i].push_back(j);
@@ -79,11 +78,10 @@ Graph parse_graph(const std::string &filename) {
       }
       continue;
     }
+    // cycle
     if (prefix == "c") {
       i32 start, end;
       linestream >> start >> end;
-      // std::cout << "Creating cycle from " << start << " to " << end
-      //           << std::endl;
       for (i32 i = start; i < end - 1; ++i) {
         graph.adjacency_list[i].push_back(i + 1);
         graph.adjacency_list[i + 1].push_back(i);
@@ -95,12 +93,10 @@ Graph parse_graph(const std::string &filename) {
       continue;
     }
 
+    // multiple edges from one vertex
     if (prefix == "m") {
       i32 from, start, end;
       linestream >> from >> start >> end;
-      // std::cout << "Connecting node " << from << " to range " << start << "
-      // to "
-      //           << end - 1 << std::endl;
       for (i32 to = start; to < end; ++to) {
         graph.adjacency_list[from].push_back(to);
         graph.adjacency_list[to].push_back(from);
@@ -109,11 +105,10 @@ Graph parse_graph(const std::string &filename) {
       continue;
     }
 
+    // edge removal
     if (prefix == "x") {
       i32 from, to;
       linestream >> from >> to;
-      // std::cout << "Removing edge from " << from << " to " << to <<
-      // std::endl;
       if (from < 0 || from >= n || to < 0 || to >= n) {
         throw std::runtime_error("Invalid edge to remove: " + line);
       }
@@ -149,7 +144,7 @@ Graph parse_graph(const std::string &filename) {
         std::cerr << "Warning: edge from " << from << " to " << to
                   << " not found in the graph.\n";
       }
-      // Also remove the reverse edge
+      // also remove the reverse edge
       auto &to_neighbors = graph.adjacency_list[to];
       it = std::remove(to_neighbors.begin(), to_neighbors.end(), from);
       if (it != to_neighbors.end()) {
@@ -183,12 +178,12 @@ parse_partition(const std::string &filename) {
     std::istringstream iss(line);
     std::string type;
     iss >> type;
+    std::unordered_set<i32> subset;
 
-    if (type == "k" || type == "c") {
+    if (type == "k") {
       i32 start, end;
       iss >> start >> end;
 
-      std::unordered_set<i32> subset;
       // subset from range [start, end)
       for (i32 i = start; i < end; ++i) {
         subset.insert(i);
@@ -203,9 +198,8 @@ parse_partition(const std::string &filename) {
       if (!subset.empty()) {
         subsets.push_back(subset);
       }
-    } else {
-      // no prefix - list of vertices for one subset
-      std::unordered_set<i32> subset;
+    } else if (type == "n") {
+      // list of vertices for one subset
       i32 v;
       while (iss >> v) {
         subset.insert(v);
@@ -213,16 +207,10 @@ parse_partition(const std::string &filename) {
       if (!subset.empty()) {
         subsets.push_back(subset);
       }
+    } else {
+      std::cerr << "Warning: unknown subset type: " << type << "\n";
     }
   }
-  // print subsets for debugging
-  // for (const auto &subset : subsets) {
-  //   std::cout << "Subset: ";
-  //   for (const auto &v : subset) {
-  //     std::cout << v << " ";
-  //   }
-  //   std::cout << "\n";
-  // }
 
   return subsets;
 }
