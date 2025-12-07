@@ -1,12 +1,14 @@
 /tex/*
-!/tex/sketch.tex
+!/tex/*.tex
 mod
 bip?
 *.txt
 xgen?.cpp
+xgen??.cpp
 *.py
 Hania/
 semi/
 presentation/
 graphs/
 latexdiff/
+.vscode/

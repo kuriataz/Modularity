@@ -1,8 +1,8 @@
-# Modularity Analysis Graph (MAG)
+# Modularity
 
 ## Opis Projektu
 
-Projekt **MAG (Modularity Analysis Graph)** służy do analizy modularity oraz modularity star. Pozwala generować grafy oraz partycje zbioru ich wierzchołków i badać dla nich wartości modularity i modularity star. Narzędzie zostało przystosowane do poszukiwań grafu, dla którego mod* > mod.
+Projekt służy do analizy modularity oraz modularity star. Pozwala generować grafy oraz partycje zbioru ich wierzchołków i badać dla nich wartości modularity i modularity star. Narzędzie zostało przystosowane do poszukiwań grafu, dla którego mod* > mod.
 
 ---
 
