@@ -1,7 +1,6 @@
 /tex/*
 !/tex/sketch.tex
 mod
-gen?
 bip?
 *.txt
 xgen?.cpp
