@@ -1,29 +1,25 @@
-#include "core/graph.hpp"
-#include "core/options.hpp"
-#include "core/types.hpp"
+#include "graph.hpp"
+#include "options.hpp"
+#include "types.hpp"
 #include <iomanip>
 #include <iostream>
 #include <string>
 #include <vector>
 
-int main(int argc, char **argv) {
+i32 main(i32 argc, char **argv) {
   constexpr i32 O_INPUT_FILE = 1;
-  constexpr i32 O_OUTPUT_FILE = 2;
-  constexpr i32 O_PARTITION_FILE = 3;
-  constexpr i32 O_CLIQUE = 4;
+  constexpr i32 O_PARTITION_FILE = 2;
+  constexpr i32 O_HELP = 3;
 
   Option_Definition option_defs[] = {
       Option_Definition{"-f", O_INPUT_FILE, true},
       Option_Definition{"-p", O_PARTITION_FILE, true},
-      Option_Definition{"-c", O_CLIQUE, true},
-      Option_Definition{"-o", O_OUTPUT_FILE, true}};
+      Option_Definition{"-h", O_HELP, false}};
 
-  Parse_Result result = parse_arguments(argc, argv, option_defs, 4);
+  Parse_Result result = parse_arguments(argc, argv, option_defs, 3);
 
   std::string input_file;
   std::string partition_file;
-  std::string output_file;
-  i32 clique_size = 0;
 
   if (!(result.options.empty())) {
     for (Option const &option : result.options) {
@@ -36,13 +32,9 @@ int main(int argc, char **argv) {
         partition_file = option.value;
         break;
       }
-      case O_CLIQUE: {
-        clique_size = std::stoi(option.value);
-        break;
-      }
-      case O_OUTPUT_FILE: {
-        output_file = option.value;
-        break;
+      case O_HELP: {
+        std::cout << "Usage: modularity -f <input_file> -p <partition_file>\n";
+        return 0;
       }
       default: {
         std::cerr << "Unknown option\n";
@@ -60,7 +52,8 @@ int main(int argc, char **argv) {
       return 1;
     }
   } else {
-    graph = create_clique(clique_size);
+    std::cerr << "Input file is required\n";
+    return 1;
   }
   graph.compute_edges();
 
@@ -83,20 +76,9 @@ int main(int argc, char **argv) {
   double modularity = partition_modularity(graph, partition);
   double modularity_star = partition_modularity_star(graph, partition);
 
-  // std::cout << "N = " << graph.n << std::endl;
-  // std::cout << "M = " << graph.m << std::endl;
-  // std::cout << "Number of subsets: " << partition.size() << std::endl;
-  // i32 p_size = partition.size();
-  // for (i32 i = 0; i < p_size; ++i) {
-  //   std::cout << "Subset " << i + 1 << ": ";
-  //   for (i32 v : partition[i]) {
-  //     std::cout << v << " ";
-  //   }
-  //   std::cout << std::endl;
-  // }
-
   std::cout << "Modularity:      " << std::fixed << std::setprecision(20)
             << modularity << std::endl;
+
   std::cout << "Modularity Star: " << std::fixed << std::setprecision(20)
             << modularity_star << std::endl;
 
