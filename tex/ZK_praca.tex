@@ -20,6 +20,10 @@
 \usepackage{hyperref}
 \usepackage{cleveref}
 \usepackage{indentfirst}
+\usepackage{microtype}
+\binoppenalty=10000
+\relpenalty=10000
+\setlength{\emergencystretch}{3em}
 \newtheorem{definition}{Definicja}
 \newtheorem{fact}{Fakt}
 \newtheorem{conclusion}{Wniosek}
@@ -78,8 +82,8 @@ Modularity is a widely used measure for evaluating the quality of a graph partit
 
 \section*{Wprowadzenie}
 \addcontentsline{toc}{section}{\protect\numberline{}Wprowadzenie}
-Wiele sieci rzeczywistych - społecznych, biologicznych czy informatycznych - wykazuje strukturę społecznościową, w której węzły tworzą grupy o gęstszych powiązaniach wewnętrznych niż zewnętrznych. Jako miarę jakości podziału grafu na społeczności często wykorzystuje się \textit{modularity}. Parametr ten został zaproponowany przez Newmana i Girvana w 2004 roku~\cite{NG04}. Tzw. modularity score mierzy jakość struktury społecznościowej danego podziału grafu, porównując liczbę krawędzi wewnętrznych w społecznościach z oczekiwaną liczbą krawędzi w losowym grafie o takim samym rozkładzie stopni wierzchołków. Popularne algorytmy klasteryzacji, takie jak algorytmy Louvain oraz Leiden, optymalizują modularity score w celu wykrywania społeczności w sieciach \cite{BGLL08, TWE19}.\\
-\indent Jednak modularity posiada pewne wady. Na przykład, wykazuje tzw. \textit{resolution limit}, co oznacza, że może nie wykrywać małych społeczności w dużych sieciach \cite{FB07, K24}. Ponadto, może przyjmować wysokie wartości dla niektórych rodzin grafów, które nie posiadają wyraźnej struktury społecznościowej. Przykłady takich rodzin to kraty \cite{K24}, drzewa o maksymalnym stopniu podliniowym z liczbą wierzchołków \cite{MS17} oraz grafy z wykluczonym minorem o maksymalnym stopniu podliniowym z liczbą wierzchołków \cite{LS22}. Jedna z modyfikacji modularity - \textit{modularity star}, eliminuje niektóre z wad klasycznej wersji, zwracając bardziej intuicyjne wartości dla konkretnych rodzin grafów.\\
+Wiele sieci rzeczywistych - społecznych, biologicznych czy informatycznych - wykazuje strukturę społecznościową, w której węzły tworzą grupy o gęstszych powiązaniach wewnętrznych niż zewnętrznych. Jako miarę jakości podziału grafu na społeczności często wykorzystuje się \textit{modularity}. Parametr ten został zaproponowany przez Newmana i Girvana w 2004 roku~\cite{NG04}. Tzw. modularity score mierzy jakość struktury społecznościowej danego podziału grafu, porównując liczbę krawędzi wewnętrznych w społecznościach z oczekiwaną liczbą krawędzi w losowym grafie o takim samym rozkładzie stopni wierzchołków. Popularne algorytmy klasteryzacji, takie jak algorytmy Louvain oraz Leiden, próbują optymalizować modularity score w celu wykrywania społeczności w sieciach \cite{BGLL08, TWE19}.\\
+\indent Jednak modularity posiada pewne wady. Na przykład, wykazuje tzw. \textit{resolution limit}, co oznacza, że może nie wykrywać małych społeczności w dużych sieciach \cite{FB07, K24}. Ponadto, może przyjmować wysokie wartości dla niektórych rodzin grafów, które nie posiadają wyraźnej struktury społecznościowej. Przykłady takich rodzin to kraty \cite{K24}, drzewa o maksymalnym stopniu podliniowym z liczbą wierzchołków \cite{MS18} oraz grafy z wykluczonym minorem o maksymalnym stopniu podliniowym z liczbą wierzchołków \cite{LS23}. Jedna z modyfikacji modularity - \textit{modularity star}, eliminuje niektóre z wad klasycznej wersji, zwracając bardziej intuicyjne wartości dla konkretnych rodzin grafów.\\
 \indent W literaturze jest niewiele badań dotyczących grafów gęstych. Większość prac koncentruje się na grafach rzadkich, które odpowiadają sieciom rzeczywistym. Postaramy się częściowo wypełnić tę lukę. W pracy tej skupimy się na badaniu modularity oraz modularity star, w kontekście rodzin grafów gęstych. Wyniki dotyczące modularity dla grafów gęstych zawarte są w pracy \cite{MS23}. Naszym celem jest przeniesienie ich na modularity star. W szczególności, przedstawimy ograniczenie górne na modularity star oraz odpowiemy na pytanie o minimalną liczbę krawędzi, które należy usunąć z grafów pełnych oraz pełnych dwudzielnych, aby ich modularity star stało się dodatnie. Poruszymy również pytanie otwarte: czy istnieje graf, dla którego modularity star jest większe niż modularity przedstawiając przesłanki, które pozwalają sądzić, że tak. Nowe, teoretyczne wyniki dla modularity star otrzymane w ramach tej pracy zostały zaprezentowane w twierdzeniach \ref{dinh_thai_star}, \ref{f_star}, \ref{delta_star}.\\
 \indent Praca ma na celu pogłębienie zrozumienia modularity star w kontekście grafów gęstych oraz dostarczenie nowych narzędzi i wyników, które mogą być użyteczne w dalszych badaniach nad wykrywaniem społeczności w sieciach.
 \newpage
@@ -308,8 +312,7 @@ Od tej pory, w kontekście modularity, będziemy ignorować izolowane wierzchoł
 \end{lemma}
 
 \begin{proof}
-  Załóżmy niewprost, że istnieje partycja zbioru wierzchołków \(G\) \(\mathcal{A} = \{A_1, A_2, \ldots, A_s, B\}\), \(mod_B(G) < 0\) oraz że połączenie \(B\) z jakąkolwiek inną społecznością w \(\mathcal{A}\) nie zwiększy wartości \(mod_{\mathcal{A}}(G)\).\\
-  Wiemy, że
+  Załóżmy niewprost, że istnieje partycja zbioru wierzchołków \(G\) \(\mathcal{A} = \{A_1, A_2, \ldots, A_s, B\}\), \(mod_B(G) < 0\) oraz że połączenie \(B\) z jakąkolwiek inną społecznością w \(\mathcal{A}\) nie zwiększy wartości \(mod_{\mathcal{A}}(G)\). Wiemy, że
   \[mod_B(G) = \frac{e(B)}{e(G)} - {\left(\frac{vol(B)}{vol(G)}\right)}^2 < 0,\]
   \[\forall_{1 \leq i \leq s} \hspace{1mm} mod_{A_i}(G) = \frac{e(A_i)}{e(G)} - {\left(\frac{vol(A_i)}{vol(G)}\right)}^2,\]
   \[\forall_{1 \leq i \leq s} \hspace{1mm} mod_{B \cup A_i}(G) = \frac{e(A_i)+e(B)+e(A_i, B)}{e(G)} - {\left(\frac{vol(A_i)+vol(B)}{vol(G)}\right)}^2.\]
@@ -410,7 +413,7 @@ Od tej pory, w kontekście modularity, będziemy ignorować izolowane wierzchoł
     \item Jeśli \(X_{uv} = 1\), to \(u\) i \(v\) należą do tej samej społeczności w \(\mathcal{A}\), więc należą do tej samej społeczności również w \(\mathcal{B}\) - wkład \(C_{u,v}\) zostanie policzony,
     \item Jeśli \(X_{uv} = 0\), to \(u\) i \(v\) należą do różnych społeczności w \(\mathcal{A}\), a z prawdopodobieństwem \(\frac{1}{k}\) trafią do tej samej społeczności w \(\mathcal{B}\) - wkład \(C_{u,v}\) zostanie pomnożony przez \(\frac{1}{k}\).
   \end{itemize}
-  Zauważmy, że \(\sum_{u,v \in V} C_{u,v} = 0\), ponieważ dla partycji jednoelementowej \(\mathcal{T}\)~\(mod_{\mathcal{T}}(G) = \frac{1}{vol(G)} \cdot \sum_{u,v \in V} C_{u,v} = 0\). Zatem
+  Zauważmy, że \(\sum_{u,v \in V} C_{u,v} = 0\), ponieważ dla partycji jednoelementowej \(\mathcal{T}\)\\\(mod_{\mathcal{T}}(G) = \frac{1}{vol(G)} \cdot \sum_{u,v \in V} C_{u,v} = 0\). Zatem
   \[\sum_{X_{uv} = 1} C_{u,v} + \sum_{X_{uv} = 0} C_{u,v} = 0,\]
   \[\sum_{X_{uv} = 0} C_{u,v} = -\sum_{X_{uv} = 1} C_{u,v}.\]
 
@@ -474,8 +477,8 @@ Powyższy lemat pozwala stwierdzić czy modularity grafu jest równe 0, bez koni
 Klasyczna wersja modularity ma kilka wad i ograniczeń, które powodują otrzymywanie nieintuicyjnych wartości dla pewnych rodzin grafów.
 \begin{itemize}
   \item \textbf{Struktura społeczności}. Modularity nie uwzględnia wewnętrznej struktury społeczności. W związku z tym, zarówno społeczność izomorficzna z gwiazdą, jak i społeczność izomorficzna ze ścieżką tego samego rozmiaru i posiadającą tyle samo krawędzi \say{zewnętrznych} w danym grafie, wbrew intuicji, będzie miała tą samą wartość \textit{modularity score}.
-  \item \textbf{Resolution limit}. W pewnych przypadkach małe społeczności mogą zostać niewykryte. Weźmy np. graf G, taki że zawiera on dwie, połączone jedną krawędzią, kliki \(K_k\). Okazuje się, że jeśli \({k\choose2} < \frac{\sqrt{2}\sqrt{|E|}-1}{2}\), to w partycjonowaniu \(\mathcal{A}\), dla którego \(mod_{\mathcal{A}}(G)=mod(G)\), obie kliki należą do jednej społeczności. Jest to sprzeczne z naszą intuicją. \cite[Twierdzenie 2]{K24}, \cite{FB07}
-  \item \textbf{Nienaturalnie duże wartości}. Modularity przyjmuje bardzo duże wartości dla niektórych klas grafów, które intuicyjnie nie mają wyraźnej struktury społecznościowej. Jak było już wcześniej wspomniane, przykłady takich klas to: klasa krat \cite[Twierdzenie 3]{K24}, klasa drzew o maksymalnym stopniu podliniowym z liczbą wierzchołków \cite{MS17} oraz klasa grafów z wykluczonym minorem o maksymalnym stopniu podliniowym z liczbą wierzchołków \cite{LS22}.
+  \item \textbf{Resolution limit}. W pewnych przypadkach małe społeczności mogą zostać niewykryte. Weźmy np. graf G, taki że zawiera on dwie, połączone jedną krawędzią, kliki \(K_k\). Okazuje się, że jeśli \(\binom{k}{2} < \frac{\sqrt{2}\sqrt{|E|}-1}{2}\), to w partycjonowaniu \(\mathcal{A}\), dla którego \(mod_{\mathcal{A}}(G)=mod(G)\), obie kliki należą do jednej społeczności. Jest to sprzeczne z naszą intuicją \cite[Twierdzenie 2]{K24}, \cite{FB07}.
+  \item \textbf{Nienaturalnie duże wartości}. Modularity przyjmuje bardzo duże wartości dla niektórych klas grafów, które intuicyjnie nie mają wyraźnej struktury społecznościowej. Jak było już wcześniej wspomniane, przykłady takich klas to: klasa krat \cite[Twierdzenie 3]{K24}, klasa drzew o maksymalnym stopniu podliniowym z liczbą wierzchołków \cite{MS18} oraz klasa grafów z wykluczonym minorem o maksymalnym stopniu podliniowym z liczbą wierzchołków \cite{LS23}.
 \end{itemize}
 
 \section{Modularity Star}
@@ -499,7 +502,7 @@ Jedną z alternatyw dla klasycznej wersji modularity jest \textbf{modularity sta
   gdzie \(\mathcal{P}(V)\) to zbiór wszystkich partycji zbioru wierzchołków grafu \(G\).
 \end{definition}
 
-Poniżej przedstawione zostały trzy alternatywne postacie \textbf{modularity star score}. Dowody pozniższych lematów są analogiczne do dowodów w rozdziale \ref{def_mod}.
+Poniżej przedstawione zostały trzy alternatywne postacie \textbf{modularity star score}. Dowody poniższych lematów są analogiczne do dowodów w rozdziale \ref{def_mod}.
 \begin{lemma}
   \label{score_pg_star}
   Niech \(G = (V, E)\) będzie grafem z co najmniej jedną krawędzią, \(\mathcal{A}\) będzie partycją zbioru wierzchołków \(G\). Wtedy \textbf{modularity star score} partycji \(\mathcal{A}\) w grafie \(G\) spełnia
@@ -548,7 +551,7 @@ Poniżej przedstawione zostały trzy alternatywne postacie \textbf{modularity st
 
 \begin{proof}
   \leavevmode\\
-  \indent Zaczenimy od ograniczenia dolnego. Dowód pokrywa się z dowodem faktu \ref{score_bounds}. Różnica polega jedynie na tym, że minimum \(mod_{\mathcal{A}}^*(G)\) jest osiągane jedynie dla grafu o dwóch wierzchołkach połączonych krawędzią - tylko wtedy gdy star factor obu społeczności wynosi 1.
+  \indent Zaczniemy od ograniczenia dolnego. Dowód pokrywa się z dowodem faktu \ref{score_bounds}. Różnica polega jedynie na tym, że minimum \(mod_{\mathcal{A}}^*(G)\) jest osiągane jedynie dla grafu o dwóch wierzchołkach połączonych krawędzią - tylko wtedy gdy star factor obu społeczności wynosi 1.
 
   W przypadku ograniczenia górnego dowód również pokrywa się z dowodem faktu \ref{score_bounds}. Iloczyn modularity score społeczności i star factor nie może przekroczyć 1.\\
 \end{proof}
@@ -616,7 +619,7 @@ Poniżej przedstawione zostały trzy alternatywne postacie \textbf{modularity st
   Wiemy, że \((\forall i)(mod_{A_i}(G) \leq 0 \land \rho(A_i) > 0)\), zatem \(mod_{\mathcal{A}}^*(G) \leq 0\), czyli \(mod_{\mathcal{A}}^*(G) = mod_{\mathcal{A}}(G) = 0\).\\
 
   \noindent \((\Leftarrow)\)\\
-  Teraz załóżmy, że \(mod^*(G) = 0\). Wtedy \((\forall A \subseteq V)(mod_A^*(G) \leq 0)\). Gdyby istniał podzbiór \(A \subseteq V\), dla którego \(mod_A^*(G) > 0\), to modularity star grafu \(G\) byłaby większa od 0.
+  Teraz załóżmy, że \(mod^*(G) = 0\). Wtedy \((\forall A \subseteq V)(mod_A^*(G) \leq 0)\). Gdyby istniał podzbiór \(A \subseteq V\), dla którego \(mod_A^*(G) > 0\), to wartość modularity star grafu \(G\) byłaby większa od 0.
 
   Rozważmy partycję zbioru wierzchołków \(G\) \(\mathcal{A}\) realizującą modularity. Modularity grafu \(G\) wynosi
   \[mod_{\mathcal{A}}(G) = \sum_{A_i \in \mathcal{A}} mod_{A_i}(G) = \sum_{A_i \in \mathcal{A}} \frac{mod_{A_i}^*(G)}{\rho(A_i)}.\]
@@ -781,7 +784,7 @@ Izolowane wierzchołki dodane do społeczności o ujemnym wkładzie zmniejszą i
 \end{conclusion}
 
 \section{Modularity i modularity star grafów prawie pełnych}
-W tym rozdziale przedstawimy odpowiedź na pytanie: Ile krawędzi należy usunąć z kliki, aby jej modularity oraz modularity star stały się niezerowe? Problem ten został poruszony i rozwiązany dla modularity w parcy \cite{MS23}. My uogólnimy go na modularity star.\\
+W tym rozdziale przedstawimy odpowiedź na pytanie: Ile krawędzi należy usunąć z kliki, aby jej modularity oraz modularity star stały się niezerowe? Problem ten został poruszony i rozwiązany dla modularity w pracy \cite{MS23}. My uogólnimy go na modularity star.\\
 \begin{fact}
   \label{clique_mod}
   Niech \(K_n\) będzie kliką o \(n\) wierzchołkach, \(n \geq 1\). Wtedy
@@ -793,10 +796,10 @@ W tym rozdziale przedstawimy odpowiedź na pytanie: Ile krawędzi należy usuną
   Dla \(n=1\) mamy \(mod(K_1) = mod^*(K_1) = 0\), ponieważ graf nie zawiera krawędzi.\\
   Załóżmy więc, że \(n \geq 2\). Niech \(\mathcal{A} = \{A_1, A_2, \ldots, A_k\}\), \(k \leq n\) będzie k-elementową partycją zbioru wierzchołków \(K_n\), wtedy
   \begin{align*}
-    mod_{\mathcal{A}}(K_n) & = \sum_{i=1}^k \left(\frac{{|A_i| \choose 2}}{{n \choose 2}} - {\left(\frac{|A_i|(n-1)}{n(n-1)}\right)}^2\right) \\
-                           & = \sum_{i=1}^k \left(\frac{|A_i|(|A_i|-1)}{n(n-1)} - {\left(\frac{|A_i|}{n}\right)}^2\right)                     \\
-                           & = \sum_{i=1}^k \frac{|A_i|^2 - n|A_i|}{n^2(n-1)}                                                                 \\
-                           & = \frac{\sum_{i=1}^k |A_i|^2 - n\sum_{i=1}^k |A_i|}{n^2(n-1)}                                                    \\
+    mod_{\mathcal{A}}(K_n) & = \sum_{i=1}^k \left(\frac{\binom{|A_i|}{2}}{\binom{n}{2}} - {\left(\frac{|A_i|(n-1)}{n(n-1)}\right)}^2\right) \\
+                           & = \sum_{i=1}^k \left(\frac{|A_i|(|A_i|-1)}{n(n-1)} - {\left(\frac{|A_i|}{n}\right)}^2\right)                   \\
+                           & = \sum_{i=1}^k \frac{|A_i|^2 - n|A_i|}{n^2(n-1)}                                                               \\
+                           & = \frac{\sum_{i=1}^k |A_i|^2 - n\sum_{i=1}^k |A_i|}{n^2(n-1)}                                                  \\
                            & = \frac{1}{n^2(n-1)} \cdot \sum_{i=1}^k |A_i|^2 - \frac{1}{n-1}.
   \end{align*}
   Zauważmy, że \(\forall_{A \in \mathcal{A}} \Delta(A) = |A| - 1\), co sprawia, że \(mod_{\mathcal{A}}(K_n) = mod_{\mathcal{A}}^*(K_n)\).\\
@@ -808,7 +811,7 @@ W tym rozdziale przedstawimy odpowiedź na pytanie: Ile krawędzi należy usuną
 \begin{conclusion}
   Dla każdego grafu \(G=(V, E)\) takiego, że \(|V| \leq 3\), \(mod(G) = mod^*(G) = 0\).\\
 \end{conclusion}
-Wniosek wynika z Faktu 10 oraz własności przedstawionych w rozdziale \ref{własności}.\\
+Wniosek wynika z Faktu \ref{clique_mod} oraz własności przedstawionych w rozdziale \ref{własności}.\\
 
 Zastanówmy się jednak jak dużo krawędzi trzeba z kliki usunąć, aby jej \(mod\) oraz \(mod^*\) były większe od zera.\\
 
@@ -861,7 +864,7 @@ Lemat ten wykorzystamy w dowodzie twierdzenia \ref{f_star}.\\
   Dla każdej liczby naturalnej \(n \geq 4\), \(f(n) = \lfloor\frac{n}{2}\rfloor + 1\).
 \end{theorem}
 
-Poniżej przedstawimy analogiczne twierdzenie dla modularity star wraz z jego dowodem wzorowanym na dowodzie opisanym w parcy \cite{MS23}.\\
+Poniżej przedstawimy analogiczne twierdzenie dla modularity star wraz z jego dowodem wzorowanym na dowodzie opisanym w pracy \cite{MS23}.\\
 
 \begin{theorem}
   \label{f_star}
@@ -872,21 +875,21 @@ Poniżej przedstawimy analogiczne twierdzenie dla modularity star wraz z jego do
   Niech \(G=(V,E)\) będzie grafem pełnym o \(n\) wierzchołkach. Niech \(\mathcal{A} = \{A_1, A_2\}\) będzie partycją \(V\), taką że \(|A_1| = \lceil\frac{n}{2}\rceil\) oraz \(|A_2| = \lfloor\frac{n}{2}\rfloor\). Niech \(k = \lfloor\frac{n}{2}\rfloor + 1\). Najpierw pokażemy, że po usunięciu \(k\) krawędzi spomiędzy \(A_1\) i \(A_2\), modularity star tak zmodyfikowanego grafu \(G'\) będzie większe od 0 - \(mod^*(G') > 0\). Zauważmy, że usunięcie krawędzi spomiędzy \(A_1\) i \(A_2\) nie wpływa na ich star factor - \(\rho(A_1) = \rho(A_2) = 1\).\\
 
   Jako pierwszy rozpatrzmy przypadek, gdy \(n\) jest liczbą parzystą. Wtedy \(k = \frac{n+2}{2}\).
-  Liczba krawędzi w grafie \(G'\) jest równa \(m = {n\choose2} - k = \frac{n^2-2n-2}{2}\).
+  Liczba krawędzi w grafie \(G'\) jest równa \(m = \binom{n}{2} - k = \frac{n^2-2n-2}{2}\).
 
   \begin{align*}
-    mod_\mathcal{A}^*(G') & = 2\cdot\left(\frac{{\frac{n}{2}\choose2}}{m} - {\left(\frac{1}{2}\right)}^2\right)       \\
+    mod_\mathcal{A}^*(G') & = 2\cdot\left(\frac{\binom{\frac{n}{2}}{2}}{m} - {\left(\frac{1}{2}\right)}^2\right)      \\
                           & = \frac{1}{2}+\frac{1}{n^2-2n-2}-\frac{1}{2}=\frac{1}{n^2-2n-2}>0, \text{ dla } n \geq 4.
   \end{align*}
 
 
-  Teraz załóżmy, że \(n\) jest liczbą nieparzystą. Wtedy \(k = \frac{n+1}{2}\). Liczba krawędzi w grafie \(G'\) jest równa \(m = {n\choose2} - k = \frac{n^2-2n-1}{2}\).
+  Teraz załóżmy, że \(n\) jest liczbą nieparzystą. Wtedy \(k = \frac{n+1}{2}\). Liczba krawędzi w grafie \(G'\) jest równa \(m = \binom{n}{2} - k = \frac{n^2-2n-1}{2}\).
 
   \begin{align*}
-    mod_\mathcal{A}^*(G') & = \left(\frac{{\frac{n+1}{2}\choose2}}{m} - {\left(\frac{\frac{n+1}{2}\cdot(n-1)-k}{2m}\right)}^2\right) + \left(\frac{{\frac{n-1}{2}\choose2}}{m} - {\left(\frac{\frac{n-1}{2}\cdot(n-1)-k}{2m}\right)}^2\right) \\
-                          & = \frac{(n+1)(n-1)+(n-1)(n+3)}{8m} - \frac{(n^2-n-2)^2 + (n^2-3n)^2}{16m^2}                                                                                                                                       \\
-                          & = \frac{(n-1)^2\cdot 2m}{8m^2} - \frac{n^4-4n^3+3n^2+2n+2}{8m^2}                                                                                                                                                  \\
-                          & = \frac{(n+1)(n-3)}{8m^2} > 0 \text{, dla } n \geq 4
+    mod_\mathcal{A}^*(G') & = \left(\frac{\binom{\frac{n+1}{2}}{2}}{m} - {\left(\frac{\frac{n+1}{2}\cdot(n-1)-k}{2m}\right)}^2\right) + \left(\frac{\binom{\frac{n-1}{2}}{2}}{m} - {\left(\frac{\frac{n-1}{2}\cdot(n-1)-k}{2m}\right)}^2\right) \\
+                          & = \frac{(n+1)(n-1)+(n-1)(n+3)}{8m} - \frac{(n^2-n-2)^2 + (n^2-3n)^2}{16m^2}                                                                                                                                         \\
+                          & = \frac{(n-1)^2\cdot 2m}{8m^2} - \frac{n^4-4n^3+3n^2+2n+2}{8m^2}                                                                                                                                                    \\
+                          & = \frac{(n+1)(n-3)}{8m^2} > 0 \text{, dla } n \geq 4.
   \end{align*}
 
   Pozostaje nam pokazać, że gdy usuniemy z grafu pełnego mniej niż \(\lfloor\frac{n}{2}\rfloor + 1\) krawędzi, to jego modularity star wciąż będzie równe 0.\\
@@ -954,7 +957,7 @@ W naszych rozważaniach pominiemy przypadek, gdy \(s = 1\) lub \(t = 1\), dla kt
   A zatem musimy pokazać, że dla każdej partycji dwuelementowej \(\mathcal{A} = \{A_1, A_2\}\) zbioru wierzchołków grafu \(K_{s,t}\), zachodzi nierówność
   \[4e(A_1)e(A_2) \leq e(A_1,A_2)^2. \label{ineq} \tag{1}\]
 
-  Korzystając z oznaczeń przedstawionych w lemacie \ref{sigma_tau} oraz \(e(A_1,A_2) = \sigma s (t-\tau t)+\tau t(s-\sigma s) = st(\sigma + \tau - 2\sigma \tau)\), możemy zapisać (\ref{ineq}) jako
+  Korzystając z oznaczeń przedstawionych w lemacie \ref{sigma_tau} oraz tego, że \\\(e(A_1,A_2) = \sigma s (t-\tau t)+\tau t(s-\sigma s) = st(\sigma + \tau - 2\sigma \tau)\), możemy zapisać (\ref{ineq}) jako
   \begin{align*}
     4\sigma s \tau t \cdot (1-\sigma)s(1-\tau)t                          & \leq (s t (\sigma(1-\tau) + (1-\sigma)\tau))^2                                         \\
     4s^2t^2(\sigma \tau+\sigma^2 \tau^2 - \sigma^2 \tau - \sigma \tau^2) & \leq s^2t^2(\sigma^2 + \tau^2+4\sigma^2\tau^2+2\sigma\tau-4\sigma^2\tau-4\sigma\tau^2) \\
@@ -1329,10 +1332,10 @@ Największa znaleziona dotychczas wartość modularity score dla tego grafu to o
 \end{thebibliography}
 
 \newpage
-\section*{Narzędzie do analizy modularity oraz modularity star}
-W ramach pracy zaimplementowano narzędzie w języku C++, którego celem była analiza oraz lepsze zrozumienie własności modularity i modularity star dla różnych typów grafów. Jednym z głównych założeń projektu było zbadanie, czy istnieje graf \(G\), dla którego zachodzi nierówność \(mod^*(G) > mod(G)\).
+\section*{Narzędzie do analizy własności modularity oraz modularity star}
+W ramach pracy zaimplementowano narzędzie w języku C++ do analizy oraz lepszego zrozumienia własności modularity i modularity star dla różnych typów grafów. Jednym z głównych założeń projektu było zbadanie, czy istnieje graf \(G\), dla którego zachodzi nierówność \(mod^*(G) > mod(G)\).
 
-Struktura programu została podzielona na kilka logicznych modułów. Katalog \texttt{core} zawiera narzędzia odpowiedzialne za parsowanie grafów oraz partycji zbioru ich wierzchołków, a także implementacje funkcji obliczających wartości modularity i modularity star. W katalogach \texttt{gens} oraz \texttt{bipartite} znajdują się narzędzia do generowania grafów o określonych własnościach oraz odpowiadających im partycji. Całość uzupełnia skrypt \texttt{run\_mod.sh}, służący do automatycznego uruchamiania eksperymentów, oraz plik \texttt{Makefile} odpowiadający za proces kompilacji projektu.
+Struktura programu została podzielona na kilka logicznych modułów. Katalog \texttt{core} zawiera narzędzia odpowiedzialne za parsowanie grafów oraz partycji zbioru ich wierzchołków, a także implementacje funkcji obliczających wartości modularity i modularity star. W katalogach \texttt{gens} oraz \texttt{bipartite} znajdują się narzędzia do generowania grafów o określonych własnościach oraz odpowiadających im partycji. Całość uzupełnia skrypt \texttt{run\_mod.sh} służący do automatycznego uruchamiania eksperymentów oraz plik \texttt{Makefile} odpowiadający za proces kompilacji projektu.
 
-Kod źródłowy programu wraz ze instrukcją jego użycia jest dostępny pod adresem: \url{https://github.com/kuriataz/Modularity}.
+Kod źródłowy programu wraz z instrukcją jego użycia jest dostępny pod adresem: \url{https://github.com/kuriataz/Modularity}.
 \end{document}

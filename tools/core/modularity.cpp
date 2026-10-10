@@ -73,14 +73,16 @@ i32 main(i32 argc, char **argv) {
     return 1;
   }
 
-  double modularity = partition_modularity(graph, partition);
-  double modularity_star = partition_modularity_star(graph, partition);
+  Mods mods = partition_mods(graph, partition);
 
-  std::cout << "Modularity:      " << std::fixed << std::setprecision(20)
-            << modularity << std::endl;
+  std::cout << "Modularity:       " << std::fixed << std::setprecision(20)
+            << mods.modularity << std::endl;
 
-  std::cout << "Modularity Star: " << std::fixed << std::setprecision(20)
-            << modularity_star << std::endl;
+  std::cout << "Modularity Star1: " << std::fixed << std::setprecision(20)
+            << mods.star1 << std::endl;
+
+  std::cout << "Modularity Star2: " << std::fixed << std::setprecision(20)
+            << mods.star2 << std::endl;
 
   // print_graph(graph);
 

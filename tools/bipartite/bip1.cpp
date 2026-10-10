@@ -15,7 +15,7 @@ Partitions:
 #include <utility>
 
 int main(int argc, char *argv[]) {
-  if (argc < 5) {
+  if (argc != 5) {
     std::cerr << "Usage: " << argv[0]
               << " <p1_size> <p2_size> <cluster1_size> <filename>\n";
     return 1;
@@ -34,14 +34,14 @@ int main(int argc, char *argv[]) {
   }
 
   std::string filename = argv[4];
+  std::string filenameP0 = filename + "P0.txt";
   std::string filenameP1 = filename + "P1.txt";
-  std::string filenameP2 = filename + "P2.txt";
   filename += ".txt";
 
   std::ofstream outfile(filename);
+  std::ofstream outfileP0(filenameP0);
   std::ofstream outfileP1(filenameP1);
-  std::ofstream outfileP2(filenameP2);
-  if (!outfile.is_open() || !outfileP1.is_open() || !outfileP2.is_open()) {
+  if (!outfile.is_open() || !outfileP0.is_open() || !outfileP1.is_open()) {
     std::cerr << "Error opening output files.\n";
     return 1;
   }
@@ -56,32 +56,32 @@ int main(int argc, char *argv[]) {
   // cluster1 contains cluster1_size "highest"vertices
   int p1_counter = 0;
   int p2_counter = 0;
-  outfileP1 << "n ";
+  outfileP0 << "n ";
   while (p1_counter + p2_counter < cluster1_size) {
-    outfileP1 << p1_counter << " ";
+    outfileP0 << p1_counter << " ";
     p1_counter++;
 
     if ((p2_counter < p2_size) && (p1_counter + p2_counter < cluster1_size)) {
-      outfileP1 << p1_size + p2_counter << " ";
+      outfileP0 << p1_size + p2_counter << " ";
       p2_counter++;
     }
   }
   // cluster 2 contains remaining vertices
-  outfileP1 << "\nn ";
+  outfileP0 << "\nn ";
   while (p1_counter + p2_counter < n) {
     if (p2_counter < p2_size) {
-      outfileP1 << p1_counter << " " << p1_size + p2_counter << " ";
+      outfileP0 << p1_counter << " " << p1_size + p2_counter << " ";
       p1_counter++;
       p2_counter++;
     } else if (p1_counter < p1_size) {
-      outfileP1 << p1_counter << " ";
+      outfileP0 << p1_counter << " ";
       p1_counter++;
     }
   }
 
   // dumb clustring for P2: first p1_size vertices, then p2_size vertices
-  outfileP2 << "k " << 0 << " " << p1_size << "\n";
-  outfileP2 << "k " << p1_size << " " << n << "\n";
+  outfileP1 << "k " << 0 << " " << p1_size << "\n";
+  outfileP1 << "k " << p1_size << " " << n << "\n";
 
   return 0;
 }

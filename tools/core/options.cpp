@@ -76,10 +76,7 @@ Graph parse_graph(const std::string &filename) {
           graph.m++;
         }
       }
-      continue;
-    }
-    // cycle
-    if (prefix == "c") {
+    } else if (prefix == "c") { // cycle
       i32 start, end;
       linestream >> start >> end;
       for (i32 i = start; i < end - 1; ++i) {
@@ -90,11 +87,15 @@ Graph parse_graph(const std::string &filename) {
       graph.adjacency_list[end - 1].push_back(start);
       graph.adjacency_list[start].push_back(end - 1);
       graph.m++;
-      continue;
-    }
-
-    // multiple edges from one vertex
-    if (prefix == "m") {
+    } else if (prefix == "p") { // path
+      i32 start, end, step;
+      linestream >> start >> end >> step;
+      for (i32 i = start; i < end - 1; i += step) {
+        graph.adjacency_list[i].push_back(i + step);
+        graph.adjacency_list[i + step].push_back(i);
+        graph.m++;
+      }
+    } else if (prefix == "m") { // multiple edges from one vertex
       i32 from, start, end;
       linestream >> from >> start >> end;
       for (i32 to = start; to < end; ++to) {
@@ -102,25 +103,20 @@ Graph parse_graph(const std::string &filename) {
         graph.adjacency_list[to].push_back(from);
         graph.m++;
       }
-      continue;
-    }
-
-    // edge removal
-    if (prefix == "x") {
+    } else if (prefix == "x") { // edge removal
       i32 from, to;
       linestream >> from >> to;
       if (from < 0 || from >= n || to < 0 || to >= n) {
         throw std::runtime_error("Invalid edge to remove: " + line);
       }
       edges_to_remove[from].push_back(to);
-      continue;
+    } else {
+      i32 from, to;
+      linestream >> from >> to;
+      graph.adjacency_list[from].push_back(to);
+      graph.adjacency_list[to].push_back(from);
+      graph.m++;
     }
-
-    i32 from, to;
-    linestream >> from >> to;
-    graph.adjacency_list[from].push_back(to);
-    graph.adjacency_list[to].push_back(from);
-    graph.m++;
   }
 
   // remove duplicates in adjacency list
@@ -213,6 +209,23 @@ parse_partition(const std::string &filename) {
   }
 
   return subsets;
+}
+
+std::string reparse_partition(const Partition &partition) {
+  std::ostringstream oss;
+  for (const auto &cluster : partition.clusters) {
+    if (cluster.nodes.empty()) {
+      continue; // Skip empty clusters
+    }
+    oss << "n";
+    int count = 0;
+    for (const auto &node : cluster.nodes) {
+      oss << " " << node;
+      count++;
+    }
+    oss << " " << count << " \n";
+  }
+  return oss.str();
 }
 
 void print_graph(const Graph &graph) {

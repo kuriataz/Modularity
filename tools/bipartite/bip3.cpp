@@ -13,7 +13,7 @@ Graph structure:
       vertices p1_size to n - 1. p1_size >= p2_size.
 
 Clusters:
-    - P: cluster 1 contains ceil(p1_size / 2) "highest" vertices from
+    - P0: cluster 1 contains ceil(p1_size / 2) "highest" vertices from
       partition 1 and ceil(p2_size / 2) "highest" vertices from partition 2.
       cluster 2 contains the remaining vertices from both partitions.- (same as
       P1 in bip2.cpp).
@@ -26,7 +26,7 @@ Clusters:
 #include <utility>
 
 i32 main(i32 argc, char *argv[]) {
-  if (argc < 5) {
+  if (argc != 5) {
     std::cerr << "Usage: " << argv[0]
               << " <p1_size> <p2_size> <edges_to_remove> "
                  "<filename>\n";
@@ -47,12 +47,13 @@ i32 main(i32 argc, char *argv[]) {
   }
 
   std::string filename = argv[4];
-  std::string filenameP1 = filename + "P1.txt";
+  std::string filenameP0 = filename + "P0.txt";
   filename += ".txt";
 
+  std::cout << "file name: " << filenameP0 << "\n";
   std::ofstream outfile(filename);
-  std::ofstream outfileP1(filenameP1);
-  if (!outfile.is_open() || !outfileP1.is_open()) {
+  std::ofstream outfileP0(filenameP0);
+  if (!outfile.is_open() || !outfileP0.is_open()) {
     std::cerr << "Error opening output files.\n";
     return 1;
   }
@@ -99,20 +100,20 @@ i32 main(i32 argc, char *argv[]) {
 
   //  cluster1 contains ceil(p1_size / 2) "highest" vertices from partition 1
   //  and ceil(p2_size / 2) "highest" vertices from partition 2.
-  outfileP1 << "n ";
+  outfileP0 << "n ";
   for (i32 i = 0; i < half_p1_size; ++i) {
-    outfileP1 << i << " ";
+    outfileP0 << i << " ";
   }
   for (i32 i = 0; i < half_p2_size; ++i) {
-    outfileP1 << p1_size + i << " ";
+    outfileP0 << p1_size + i << " ";
   }
-  outfileP1 << "\nn ";
+  outfileP0 << "\nn ";
   for (i32 i = half_p1_size; i < p1_size; ++i) {
-    outfileP1 << i << " ";
+    outfileP0 << i << " ";
   }
   for (i32 i = half_p2_size; i < p2_size; ++i) {
-    outfileP1 << p1_size + i << " ";
+    outfileP0 << p1_size + i << " ";
   }
-  outfileP1 << "\n";
+  outfileP0 << "\n";
   return 0;
 }

@@ -37,6 +37,8 @@ Graph parse_graph(const std::string &filename);
 std::vector<std::unordered_set<i32>>
 parse_partition(const std::string &filename);
 
+std::string reparse_partition(const Partition &partition);
+
 void print_graph(const Graph &graph);
 
 #endif

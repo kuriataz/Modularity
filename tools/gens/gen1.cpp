@@ -11,11 +11,12 @@
 #include <iostream>
 
 i32 main(i32 argc, char *argv[]) {
-  if (argc != 9) {
-    std::cerr << "Usage: " << argv[0]
-              << " <num_swarms> <swarm_size> <swarms_in_cluster> "
-                 "<path_size> <path_frac> "
-                 "<num_connectors> <num_single> <filename>\n";
+  if (argc != 10) {
+    std::cerr
+        << "Usage: " << argv[0]
+        << " <num_swarms> <swarm_size> <swarms_in_cluster> "
+           "<path_size> <path_frac> "
+           "<num_connectors> <num_single> <cluster_to_rob_size> <filename>\n";
     return 1;
   }
 
@@ -27,8 +28,9 @@ i32 main(i32 argc, char *argv[]) {
   i32 path_frac = std::stoi(argv[5]);
   i32 num_connectors = std::stoi(argv[6]);
   i32 num_single = std::stoi(argv[7]);
+  i32 cluster_to_rob_size = std::stoi(argv[8]);
 
-  std::string filename = argv[8];
+  std::string filename = argv[9];
   std::string filenameP0 = filename + "P0.txt";
   std::string filenameP1 = filename + "P1.txt";
   std::string filenameP2 = filename + "P2.txt";
@@ -69,8 +71,8 @@ i32 main(i32 argc, char *argv[]) {
   p1(outfileP1, num_swarms, swarm_size, path_size, path_frac, num_single);
   p2(outfileP2, num_swarms, swarm_size, path_size, path_frac, swarms_in_cluster,
      num_single);
-  p3(outfileP3, num_swarms, swarm_size, path_size, path_frac, num_connectors,
-     num_single);
+  p3(outfileP3, num_swarms, swarm_size, path_size, path_frac, swarms_in_cluster,
+     cluster_to_rob_size, num_connectors, num_single);
 
   return 0;
 }

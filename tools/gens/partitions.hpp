@@ -61,5 +61,18 @@ void p2(std::ofstream &outfile, i32 num_swarms, i32 swarm_size, i32 path_size,
  */
 void p3(std::ofstream &outfile, i32 num_swarms, i32 swarm_size, i32 path_size,
         i32 path_frac, i32 num_connectors, i32 num_single = 0);
+void p3(std::ofstream &outfile, i32 num_swarms, i32 swarm_size, i32 path_size,
+        i32 path_frac, i32 swarms_in_cluster, i32 cluster_to_rob_size,
+        i32 num_connectors, i32 num_single);
+/**
+ * @brief pK1_4 partitioning (only for grids): the aim is to create as many as
+ * possible clusters that look like a bipartitr graph K_{1,4}. the rest of
+ * vertices creates own clusters (trash)
+ * @param outfile output file stream
+ * @param n the size of the grid
+ */
+void pK1_4(std::ofstream &outfile, i32 n);
+
+void p_FSH(std::ofstream &outfile, i32 n);
 
 #endif // PARTITIONS_HPP

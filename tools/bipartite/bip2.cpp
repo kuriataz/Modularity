@@ -13,7 +13,7 @@ Graph structure:
       vertices p1_size to n - 1. p1_size >= p2_size.
 
 Clusters:
-    - P: cluster 1 contains min(cluster1_size/2, p2_size)(*) "highest"
+    - P0: cluster 1 contains min(cluster1_size/2, p2_size)(*) "highest"
       vertices from partition 2 and cluster1_size/2 + 1 or cluster1_size -
       p2_size (depending on (*)) "highest" vertices from partition 1. cluster 2
       contains the remaining vertices from both partitions.
@@ -29,7 +29,7 @@ Clusters:
 #include <utility>
 
 i32 main(i32 argc, char *argv[]) {
-  if (argc < 6) {
+  if (argc != 6) {
     std::cerr << "Usage: " << argv[0]
               << " <p1_size> <p2_size> <cluster1_size> <edges_to_remove> "
                  "<filename>\n";
@@ -55,14 +55,14 @@ i32 main(i32 argc, char *argv[]) {
   }
 
   std::string filename = argv[5];
+  std::string filenameP0 = filename + "P0.txt";
   std::string filenameP1 = filename + "P1.txt";
-  std::string filenameP2 = filename + "P2.txt";
   filename += ".txt";
 
   std::ofstream outfile(filename);
+  std::ofstream outfileP0(filenameP0);
   std::ofstream outfileP1(filenameP1);
-  std::ofstream outfileP2(filenameP2);
-  if (!outfile.is_open() || !outfileP1.is_open() || !outfileP2.is_open()) {
+  if (!outfile.is_open() || !outfileP0.is_open() || !outfileP1.is_open()) {
     std::cerr << "Error opening output files.\n";
     return 1;
   }
@@ -74,17 +74,17 @@ i32 main(i32 argc, char *argv[]) {
     outfile << "m " << i << " " << p1_size << " " << n << "\n";
   }
 
-  // Clustering 1
+  // Clustering 0
   // cluster1 contains cluster1_size "highest" vertices
   i32 p1_counter = 0;
   i32 p2_counter = 0;
-  outfileP1 << "n ";
+  outfileP0 << "n ";
   while (p1_counter + p2_counter < cluster1_size) {
-    outfileP1 << p1_counter << " ";
+    outfileP0 << p1_counter << " ";
     p1_counter++;
 
     if ((p2_counter < p2_size) && (p1_counter + p2_counter < cluster1_size)) {
-      outfileP1 << p1_size + p2_counter << " ";
+      outfileP0 << p1_size + p2_counter << " ";
       p2_counter++;
     }
   }
@@ -120,37 +120,37 @@ i32 main(i32 argc, char *argv[]) {
   }
 
   // cluster 2 contains remaining vertices
-  outfileP1 << "\nn ";
+  outfileP0 << "\nn ";
   while (p1_counter + p2_counter < n) {
     if (p2_counter < p2_size) {
-      outfileP1 << p1_counter << " " << p1_size + p2_counter << " ";
+      outfileP0 << p1_counter << " " << p1_size + p2_counter << " ";
       p1_counter++;
       p2_counter++;
     } else if (p1_counter < p1_size) {
-      outfileP1 << p1_counter << " ";
+      outfileP0 << p1_counter << " ";
       p1_counter++;
     }
   }
 
-  // Clustering 2
+  // Clustering 1
   //  cluster1 contains ceil(p1_size / 2) "highest" vertices from partition 1
   //  and ceil(p2_size / 2) "highest" vertices from partition 2.
   i32 half_p1_size = std::ceil(p1_size / 2.0);
   i32 half_p2_size = std::ceil(p2_size / 2.0);
-  outfileP2 << "n ";
+  outfileP1 << "n ";
   for (i32 i = 0; i < half_p1_size; ++i) {
-    outfileP2 << i << " ";
+    outfileP1 << i << " ";
   }
   for (i32 i = 0; i < half_p2_size; ++i) {
-    outfileP2 << p1_size + i << " ";
+    outfileP1 << p1_size + i << " ";
   }
-  outfileP2 << "\nn ";
+  outfileP1 << "\nn ";
   for (i32 i = half_p1_size; i < p1_size; ++i) {
-    outfileP2 << i << " ";
+    outfileP1 << i << " ";
   }
   for (i32 i = half_p2_size; i < p2_size; ++i) {
-    outfileP2 << p1_size + i << " ";
+    outfileP1 << p1_size + i << " ";
   }
-  outfileP2 << "\n";
+  outfileP1 << "\n";
   return 0;
 }

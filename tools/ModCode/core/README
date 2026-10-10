@@ -1,0 +1,18 @@
+# CORE
+
+Katalog ten zawiera kluczowe komponenty logiczne projektu, współdzielone przez program główny oraz narzędzia pomocnicze. Znajdują się tu definicje struktur danych oraz implementacje algorytmów obliczających miary modularności.
+
+## Opis Plików
+
+### Logika i Matematyka
+* **`modularity.cpp`**: Główny punkt wejścia programu `mod`.
+* **`graph.hpp` / `graph.cpp`**:
+    * Definicja struktury `Graph` (listy sąsiedztwa).
+    * Implementacja funkcji `compute_edges()` (zliczanie krawędzi $m$).
+    * **Kluczowe funkcje:** `partition_modularity` (oblicza $mod$ danej partycji) oraz `partition_modularity_star` (oblicza $mod^*$ danej partycji).
+
+### Obsługa Danych (I/O)
+* **`options.hpp` / `options.cpp`**:
+    * Parser argumentów linii poleceń.
+    * Parsery plików tekstowych (`.txt`). Obsługuje specyficzny format grafów (komendy `m`, `k`, `x`) oraz format partycji.
+* **`types.hpp`**: Definicje typów prostych (aliasy `i32`, `i64` itp.).
